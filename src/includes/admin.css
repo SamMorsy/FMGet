@@ -1,0 +1,62 @@
+/* Basic style for the admin side */
+
+body {
+    display: block;
+    margin: 0px;
+    font-family: "Lucida Grande",Verdana,Arial,Helvetica,sans-serif;
+    font-size: 11px;
+}
+
+/* Styling for the top bar */
+.fmg-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 18px;
+    background-color: #333;
+    color: white;
+    padding: 2px 10px 2px 10px;
+}
+
+/* Styling for the body container */
+.fmg-body {
+    position: absolute;
+    top: 40px;
+    left: 10px;
+    right: 10px;
+    bottom: 20px;
+    display: flex;
+}
+
+/* Styling for the sidebar */
+.fmg-sidebar {
+    width: 203px;
+    height: auto;
+    border: 1px solid #b2b8bf;
+    background-color: White;
+}
+
+.fmg-sidebaritem {
+    padding: 7px 10px 7px 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    background-color: #f3f3f3;
+}
+
+.fmg-sidebaritem:hover {
+    background-color: #ddd;
+}
+
+.fmg-sidebaritem-active {
+    padding: 7px 10px 7px 10px;
+    background-color: #d3d3d3;
+    font-weight: bold;
+}
+
+/* Styling for the main content area */
+.fmg-mainarea {
+    flex-grow: 1;
+    margin-left: 12px;
+    border: 1px solid #b2b8bf;
+    background-color: #fff;
+}
