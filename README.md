@@ -28,5 +28,4 @@ FMGet is an independent entity and this project has not been authorized, sponsor
 MIT License   http://opensource.org/licenses/mit-license
 
 # Credits
-The design for the backend is inspired by FLINT / Büro für Gestaltung
-Bern, Switzerland
+The design for the backend is inspired by FLINT / Büro für Gestaltung, Bern, Switzerland http://bueroflint.com/
