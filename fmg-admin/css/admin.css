@@ -1,10 +1,9 @@
-/* Basic style for the admin side */
-
 body {
     display: block;
     margin: 0px;
     font-family: "Lucida Grande",Verdana,Arial,Helvetica,sans-serif;
     font-size: 11px;
+    background-color: #cbd2d9;
 }
 
 /* Styling for the top bar */
@@ -33,7 +32,7 @@ body {
     width: 203px;
     height: auto;
     border: 1px solid #b2b8bf;
-    background-color: White;
+    background-color: #dbecf4;
 }
 
 .fmg-sidebaritem {
@@ -59,4 +58,36 @@ body {
     margin-left: 12px;
     border: 1px solid #b2b8bf;
     background-color: #fff;
+}
+
+.fmg-form-object{
+    margin: 10px;
+}
+
+.fmg-form-codebox-box {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    width: 550px;
+    overflow-x: auto;
+}
+.fmg-form-codebox-button {
+    padding: 8px 15px;
+    font-size: 14px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.fmg-form-codebox-button:active {
+    background-color: #0056b3;
+}
+.fmg-form-codebox-message {
+    font-size: 14px;
+    color: green;
+    margin-top: 5px;
+    display: none;
 }
