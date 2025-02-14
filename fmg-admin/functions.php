@@ -9,7 +9,7 @@
 /**
  * Updates existing constants in the fmg-config.php file or adds new ones.
  *
- * @param array $updates An associative array of variable names and their values
+ * @param array $updates An associative array of constants names and their values
  * @return boolean
  */
 function config_update($updates) {
@@ -68,7 +68,7 @@ function generate_random($length = 20)
 function generate_wv_code($authKey1, $authKey2, $authKey3)
 {
     global $fmg_version;
-    $adminLink = 'https://'. fmg_guess_url() . '/fmg-admin.php?action=connect';
+    $adminLink = fmg_guess_url() . '/fmg-admin.php?action=connect';
 
     //Formatted the code to be ready for the FileMaker calculation engine, Open heredoc
     $html = <<<HTML

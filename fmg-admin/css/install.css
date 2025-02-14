@@ -185,8 +185,10 @@ a.fmg-button:hover {
     height: 100%;
     object-fit: contain;
 }
-.warning{
-    color: #bb0707;
+.warning {
+    color: #b31412;
+    background-color: #feefe3;
+    padding: 15px 10px;
 }
 
 @media (max-width: 940px) {

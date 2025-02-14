@@ -233,8 +233,8 @@ switch ($step) {
         echo '    <div class="codebox-message">' . txt('setup_copied') . '</div>';
         echo '    <div class="codebox-box">' . $wv_code . '</div>'; // Sanitized WV code
         echo '</div>';
-        echo '<p class="warning"><strong>*' . txt('setup_vw_warning1') . '</strong></p>';
-        echo '<p class="warning"><strong>*' . txt('setup_vw_warning2') . '</strong></p>';
+        echo '<p class="warning"><b>' . txt('setup_vw_important') . ':</b> ' . txt('setup_vw_warning1') . '</p>';
+        echo '<p class="warning"><b>Important:</b> ' . txt(text: 'setup_vw_warning2') . '</p>';
         echo '<p>' . txt('setup_vw_details3') . '</p>';
         echo '<ul class="items-list"><li>';
         echo txt('setup_vw_options1');

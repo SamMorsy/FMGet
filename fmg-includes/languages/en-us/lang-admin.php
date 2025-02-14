@@ -33,6 +33,7 @@ return [
     "setup_vw_size1" => "The recommeneded size for the Web Viewer is",
     "setup_vw_size2" => "Width: 1000pt / Height: 600pt",
 
+    "setup_vw_important" => "Important",
     "setup_vw_warning1" => "Don't close this page before copying the code above, This code is only generated once.",
     "setup_vw_warning2" => "Don't share this code with anyone, This code enables the user to fully control the FMGet application.",
 

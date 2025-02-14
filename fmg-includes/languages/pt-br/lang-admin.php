@@ -33,6 +33,7 @@ return [
     "setup_vw_size1" => "O tamanho recomendado para o Visualizador da Web é",
     "setup_vw_size2" => "Largura: 1000pt / Altura: 600pt",
 
+    "setup_vw_important" => "Importante",
     "setup_vw_warning1" => "Não feche esta página antes de copiar o código acima. Este código é gerado apenas uma vez.",
     "setup_vw_warning2" => "Não compartilhe este código com ninguém. Este código permite ao usuário controlar totalmente a aplicação FMGet.",
 
