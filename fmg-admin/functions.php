@@ -1,94 +1,37 @@
 <?php
+/**
+ * These functions are needed to setup / manage FMGet.
+ *
+ * @package FMGet
+ */
+
 
 /**
- * Creates a config.php file and initializes it with the provided authentication keys.
+ * Updates existing constants in the fmg-config.php file or adds new ones.
  *
- * @param mixed $authKey1 The value for CONFIG_AUTH_KEY1
- * @param mixed $authKey2 The value for CONFIG_AUTH_KEY2
- * @param mixed $authKey3 The value for CONFIG_AUTH_KEY3
- * @return void
+ * @param array $updates An associative array of variable names and their values
+ * @return boolean
  */
-function config_create($authKey1, $authKey2, $authKey3)
-{
-    $configFilePath = __DIR__ . '/fmg-includes/config.php';
-    $configContent = "<?php\n\n";
-    $configContent .= "// Configuration File\n";
-    $configContent .= "define('CONFIG_AUTH_KEY1', " . var_export($authKey1, true) . ");\n";
-    $configContent .= "define('CONFIG_AUTH_KEY2', " . var_export($authKey2, true) . ");\n";
-    $configContent .= "define('CONFIG_AUTH_KEY3', " . var_export($authKey3, true) . ");\n";
+function config_update($updates) {
+    $configFile = ABSPATH . 'fmg-config.php';
 
-    // Ensure the directory exists
-    if (!is_dir(__DIR__ . '/includes')) {
-        mkdir(__DIR__ . '/includes', 0755, true);
+    if (!file_exists($configFile)) {
+        return false;
     }
 
-    // Write the config content to the file
-    file_put_contents($configFilePath, $configContent);
-}
+    $configContent = file_get_contents($configFile);
 
-/**
- * Updates existing variables in the config.php file or adds new ones.
- *
- * @param array $variables An associative array of variable names and their values
- * @return void
- */
-function config_set(array $variables)
-{
-    $configFilePath = __DIR__ . '/fmg-includes/config.php';
+    foreach ($updates as $update) {
+        $constantName = $update['name'];
+        $newValue = addslashes($update['value']); 
 
-    if (!file_exists($configFilePath)) {
-        throw new Exception("Config file not found. Please create it first using config_create().");
+        $pattern = "/define\s*\(\s*['\"]" . preg_quote($constantName, '/') . "['\"]\s*,\s*['\"].*?['\"]\s*\);/";
+        $replacement = "define( '$constantName', '$newValue' );";
+
+        $configContent = preg_replace($pattern, $replacement, $configContent);
     }
 
-    // Load the existing config file
-    $configContent = file_get_contents($configFilePath);
-
-    foreach ($variables as $variableName => $value) {
-        // Prepare the new variable line
-        $variableLine = "\$$variableName = " . var_export($value, true) . ";\n";
-
-        // Update if the variable exists, otherwise add it
-        if (preg_match("/\$$variableName\\s*=", $configContent)) {
-            $configContent = preg_replace(
-                "/\$$variableName\\s*=.*?;/",
-                trim($variableLine),
-                $configContent
-            );
-        } else {
-            $configContent .= $variableLine;
-        }
-    }
-
-    // Write the updated content back to the file
-    file_put_contents($configFilePath, $configContent);
-}
-
-/**
- * Removes a variable from the config.php file if it exists.
- *
- * @param string $variableName The name of the variable to remove
- * @return void
- */
-function config_unset($variableName)
-{
-    $configFilePath = __DIR__ . '/fmg-includes/config.php';
-
-    if (!file_exists($configFilePath)) {
-        throw new Exception("Config file not found. Please create it first using config_create().");
-    }
-
-    // Load the existing config file
-    $configContent = file_get_contents($configFilePath);
-
-    // Remove the variable if it exists
-    $configContent = preg_replace(
-        "/^\\$" . preg_quote($variableName, '/') . "\\s*=.*?;\\n?/m",
-        '',
-        $configContent
-    );
-
-    // Write the updated content back to the file
-    file_put_contents($configFilePath, $configContent);
+    return file_put_contents($configFile, $configContent) !== false;
 }
 
 /**
@@ -97,7 +40,7 @@ function config_unset($variableName)
  * @param int $length The needed length of the random string
  * @return string
  */
-function generateRandomString($length = 20)
+function generate_random($length = 20)
 {
     // Define the character set (letters and numbers)
     $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*()';
@@ -122,7 +65,7 @@ function generateRandomString($length = 20)
  * 
  * @return string The webviewer code
  */
-function getRedirectHtml($authKey1, $authKey2, $authKey3)
+function generate_wv_code($authKey1, $authKey2, $authKey3)
 {
     global $fmg_version;
     $adminLink = 'https://'. fmg_guess_url() . '/fmg-admin.php?action=connect';

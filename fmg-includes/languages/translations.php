@@ -64,6 +64,8 @@ function fmg_load_language($language_code = '', $category = 'apps'){
         if (!preg_match('/^[a-z]{2}(-[a-z]{2})?$/', $language_clean_code) || !array_key_exists($language_clean_code, $fmg_languages)) {
             $language_clean_code = 'en-us';
         }
+    }elseif (defined('FMGLANG') && '' !== FMGLANG) {
+        $language_clean_code = FMGLANG;
     } else {
         $language_clean_code = 'en-us';
     }
@@ -77,6 +79,37 @@ function fmg_load_language($language_code = '', $category = 'apps'){
     }
 }
 
+/**
+ * Verify that the given language code is valid.
+ *
+ * This function will return the clean verified language code or the default language code.
+ *
+ * @param string    $language_code      The unique language code to be checked.
+ *                                      Default is en-us
+ * @global array    $fmg_languages      The FMGet array of languages.
+ * 
+ * @return string   The clean language code or the default language code
+ */
+function fmg_check_language_code($language_code){
+    global $fmg_languages;
+    if (!empty($language_code)) {
+        $language_clean_code = preg_replace('/[^a-z-]/', '', strtolower($language_code));
+        if (!preg_match('/^[a-z]{2}(-[a-z]{2})?$/', $language_clean_code) || !array_key_exists($language_clean_code, $fmg_languages)) {
+            $language_clean_code = 'en-us';
+        }
+    }elseif (defined('FMGLANG') && '' !== FMGLANG) {
+        $language_clean_code = FMGLANG;
+    } else {
+        $language_clean_code = 'en-us';
+    }
+
+    $language_path = ABSPATH . FMGINC . '/languages/' . $language_clean_code . '/lang-admin.php';
+
+    if (!file_exists($language_path)) {
+        $language_clean_code = 'en-us';
+    }
+    return $language_clean_code;
+}
 
 /**
  * Retrieves the translation of $text.

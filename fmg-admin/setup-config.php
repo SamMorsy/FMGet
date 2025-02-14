@@ -171,10 +171,9 @@ switch ($step) {
             fmg_die('<p>' . txt('setup_error_curl1') . '</p>' . "<a href=\"setup-config.php?step=0&lang={$language_code}\">" . txt('setup_back2') . "</a>", 'FMGet Setup');
         }
         $curl_test_url = fmg_guess_url() . "/fmg-admin/setup-config.php?step=1&lang={$language_code}";
-		if ($_SERVER['HTTP_HOST'] == "localhost") {
-			$curl_test_url = str_replace('https://', '',$curl_test_url);
-		}
-
+        if ($_SERVER['HTTP_HOST'] == "localhost") {
+            $curl_test_url = str_replace('https://', '', $curl_test_url);
+        }
         $curl_test_data = ["test" => "curl_check"];
         $curl_test_ch = curl_init($curl_test_url);
         curl_setopt($curl_test_ch, CURLOPT_RETURNTRANSFER, true);
@@ -188,33 +187,62 @@ switch ($step) {
         curl_close($curl_test_ch);
 
         // Create the auth keys
-        $authKey1 = generateRandomString(40);
-        $authKey2 = generateRandomString(40);
-        $authKey3 = generateRandomString(40);
+        $authKey1 = generate_random(40);
+        $authKey2 = generate_random(40);
+        $authKey3 = generate_random(40);
+        $logged_in_key = generate_random(40);
+        $root_domain = fmg_guess_url();
+        $fmg_lang = fmg_check_language_code($language_code);
 
         // Generate the code for FileMaker Web Viewer Access
-        $wv_code = getRedirectHtml($authKey1, $authKey2, $authKey3);
+        $wv_code = generate_wv_code($authKey1, $authKey2, $authKey3);
 
         // rename the config file and fill it with the auth keys and the selected language code and the current domain
+        // Write to a new file named 'fmg-config.php'
+        $config_content = implode("", $config_file);
+        if (file_put_contents(ABSPATH . 'fmg-config.php', $config_content) === false) {
+            fmg_die('<p>' . txt('setup_error_config') . '</p>' . "<a href=\"setup-config.php?step=0&lang={$language_code}\">" . txt('setup_back2') . "</a>", 'FMGet Setup');
+        }
+        $updates_for_config = [
+            ['name' => 'DB_NAME', 'value' => ''],
+            ['name' => 'DB_USER', 'value' => ''],
+            ['name' => 'DB_PASSWORD', 'value' => ''],
+            ['name' => 'DB_HOST', 'value' => ''],
+
+            ['name' => 'FMG_MAIN_APP', 'value' => ''],
+
+            ['name' => 'FMG_SITEURL', 'value' => $root_domain],
+            ['name' => 'FMGLANG', 'value' => $fmg_lang],
+
+            ['name' => 'AUTH_KEY1', 'value' => $authKey1],
+            ['name' => 'AUTH_KEY2', 'value' => $authKey2],
+            ['name' => 'AUTH_KEY3', 'value' => $authKey3],
+            ['name' => 'LOGGED_IN_KEY', 'value' => $logged_in_key]
+        ];
+        if (config_update($updates_for_config) == false) {
+            fmg_die('<p>' . txt('setup_error_config') . '</p>' . "<a href=\"setup-config.php?step=0&lang={$language_code}\">" . txt('setup_back2') . "</a>", 'FMGet Setup');
+        }
 
 
         //Show page
         setup_config_display_header(txt('setup_welcome_title'));
-        echo "<p>" . txt('setup_vw_details1') . "</p>";
-        echo "<p><strong>" . txt('setup_vw_details2') . "</strong></p>";
+        echo '<p>' . txt('setup_vw_details1') . '</p>';
+        echo '<p><strong>' . txt('setup_vw_details2') . '</strong></p>';
         echo '<div class="codebox-container">';
         echo '    <a class="codebox-button">' . txt('setup_button_copy') . '</a>';
         echo '    <div class="codebox-message">' . txt('setup_copied') . '</div>';
-        echo '    <div class="codebox-box">' . $wv_code . '</div>'; // Sanitize WV code
+        echo '    <div class="codebox-box">' . $wv_code . '</div>'; // Sanitized WV code
         echo '</div>';
-        echo "<p>" . txt('setup_vw_details3') . "</p>";
+        echo '<p class="warning"><strong>*' . txt('setup_vw_warning1') . '</strong></p>';
+        echo '<p class="warning"><strong>*' . txt('setup_vw_warning2') . '</strong></p>';
+        echo '<p>' . txt('setup_vw_details3') . '</p>';
         echo '<ul class="items-list"><li>';
         echo txt('setup_vw_options1');
         echo '</li><li>';
         echo txt('setup_vw_options2');
         echo '</li></ul>';
-        echo "<p>" . txt('setup_vw_size1') . ' <strong>' . txt('setup_vw_size2') . "</strong></p>";
-        echo "<p>" . txt('setup_vw_details4') . "</p>";
+        echo '<p>' . txt('setup_vw_size1') . ' <strong>' . txt('setup_vw_size2') . '</strong></p>';
+        echo '<p>' . txt('setup_vw_details4') . '</p>';
         echo '<div class="section-row-photo"><img src="images/setup-filemaker-webviewer-config.png"></div>';
         setup_config_display_footer();
         break;

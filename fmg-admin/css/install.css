@@ -185,6 +185,9 @@ a.fmg-button:hover {
     height: 100%;
     object-fit: contain;
 }
+.warning{
+    color: #bb0707;
+}
 
 @media (max-width: 940px) {
     .codebox-container {

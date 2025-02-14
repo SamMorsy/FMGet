@@ -30,7 +30,12 @@ return [
     "setup_vw_options1" => "Enable 'Allow interaction with web viewer content'",
     "setup_vw_options2" => "(Optional) Disable 'Display content in Find mode / progress bar / status messages'",
     "setup_vw_details4" => "The image below shows the best configurations In the 'Web Viewer Setup' window:",
-    "setup_vw_details5" => "The recommeneded width is Web Viewer Setup' window:",
     "setup_vw_size1" => "The recommeneded size for the Web Viewer is",
     "setup_vw_size2" => "Width: 1000pt / Height: 600pt",
+
+    "setup_vw_warning1" => "Don't close this page before copying the code above, This code is only generated once.",
+    "setup_vw_warning2" => "Don't share this code with anyone, This code enables the user to fully control the FMGet application.",
+
+    "setup_error_config" => "Error: Could not create fmg-config.php, Please check your web server configurations before you can continue.",
+
 ];

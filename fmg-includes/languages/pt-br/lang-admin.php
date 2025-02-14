@@ -30,9 +30,13 @@ return [
     "setup_vw_options1" => "Ativar 'Permitir interação com o conteúdo do visualizador da web'",
     "setup_vw_options2" => "(Opcional) Desativar 'Exibir conteúdo no modo Localizar / barra de progresso / mensagens de status'",
     "setup_vw_details4" => "A imagem abaixo mostra as melhores configurações na janela 'Configuração do Visualizador da Web':",
-    "setup_vw_details5" => "A largura recomendada na janela 'Configuração do Visualizador da Web' é:",
     "setup_vw_size1" => "O tamanho recomendado para o Visualizador da Web é",
     "setup_vw_size2" => "Largura: 1000pt / Altura: 600pt",
+
+    "setup_vw_warning1" => "Não feche esta página antes de copiar o código acima. Este código é gerado apenas uma vez.",
+    "setup_vw_warning2" => "Não compartilhe este código com ninguém. Este código permite ao usuário controlar totalmente a aplicação FMGet.",
+
+    "setup_error_config" => "Erro: Não foi possível criar o fmg-config.php. Verifique as configurações do seu servidor web antes de continuar.",
 
 
 ];

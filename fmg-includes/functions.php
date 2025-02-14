@@ -94,7 +94,6 @@ function fmg_guess_url() {
 		// The request is for the admin.
 		if ( str_contains( $_SERVER['REQUEST_URI'], 'fmg-admin' ) || str_contains( $_SERVER['REQUEST_URI'], 'fmg-admin.php' ) ) {
 			$path = preg_replace( '#/(fmg-admin/?.*|fmg-admin\.php.*)#i', '', $_SERVER['REQUEST_URI'] );
-
 		} else {
 			if ( str_contains( $_SERVER['SCRIPT_FILENAME'], $abspath_fix ) ) {
 				// Request is hitting a file inside ABSPATH.
