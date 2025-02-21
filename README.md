@@ -31,6 +31,3 @@ FMGet is an independent entity and this project has not been authorized, sponsor
 
 ## License
 MIT License   https://github.com/SamMorsy/FMGet/blob/main/LICENSE
-
-## Credits
-The design for the backend is inspired by FLINT / Büro für Gestaltung, Bern, Switzerland http://bueroflint.com/
