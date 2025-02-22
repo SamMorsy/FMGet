@@ -19,7 +19,7 @@ function fmg_showMessage(message, message_type) {
     });
 }
 
-function fmg_form_dropdownfilterOptions(inputElement) {
+function fmg_dropdownfilterOptions(inputElement) {
     const dropdownContainer = inputElement.closest('.fmg-ui-field-container.menu');
     const dropdownMenu = dropdownContainer.querySelector('.fmg-ui-field-options');
     const filterValue = inputElement.value.toLowerCase();
@@ -34,13 +34,13 @@ function fmg_form_dropdownfilterOptions(inputElement) {
     });
 }
 
-function fmg_form_dropdownshow(inputElement) {
+function fmg_dropdownshow(inputElement) {
     const dropdownContainer = inputElement.closest('.fmg-ui-field-container.menu');
     const dropdownMenu = dropdownContainer.querySelector('.fmg-ui-field-options');
     dropdownMenu.classList.add('active');
 }
 
-function fmg_form_dropdownhide(inputElement) {
+function fmg_dropdownhide(inputElement) {
     const dropdownContainer = inputElement.closest('.fmg-ui-field-container.menu');
     const dropdownMenu = dropdownContainer.querySelector('.fmg-ui-field-options');
     setTimeout(() => {
@@ -48,7 +48,7 @@ function fmg_form_dropdownhide(inputElement) {
     }, 200);
 }
 
-function fmg_form_dropdownselectOption(event) {
+function fmg_dropdownselectOption(event) {
     const dropdownContainer = event.currentTarget.closest('.fmg-ui-field-container.menu');
     const inputElement = dropdownContainer.querySelector('input');
 

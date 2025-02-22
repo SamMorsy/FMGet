@@ -395,11 +395,11 @@ function block_menufield($metadata, $options)
     echo '<div class="fmg-ui-block' . $mt . $mb . '">';
     echo '<div class="fmg-ui-field-container menu">';
     echo '<input type="' . $type . '" name="' . $name . '" value="' . $text . '" class="fmg-ui-field' . $align . $disabled_tag . '" id="input-' . $name . '" placeholder=" "' . $custom_style . $disabled_tag . ' ';
-    echo 'oninput="fmg_form_dropdownfilterOptions(this)" ';
-    echo 'onfocus="fmg_form_dropdownshow(this)" ';
-    echo 'onblur="fmg_form_dropdownhide(this)" ' . $required_attr . '>';
+    echo 'oninput="fmg_dropdownfilterOptions(this)" ';
+    echo 'onfocus="fmg_dropdownshow(this)" ';
+    echo 'onblur="fmg_dropdownhide(this)" ' . $required_attr . '>';
     echo '<label for="input-' . $name . '" class="fmg-ui-field-label">' . $label . '</label>';
-    echo '<div class="fmg-ui-field-options" onclick="fmg_form_dropdownselectOption(event)">';
+    echo '<div class="fmg-ui-field-options" onclick="fmg_dropdownselectOption(event)">';
 
     foreach ($options as $entry) {
         $dbtable .= "<div>{$entry}</div>";
@@ -413,4 +413,154 @@ function block_menufield($metadata, $options)
 }
 
 
+/**
+ * Generate the HTML code for a checkbox block and style it as 
+ * needed using the metadata and echo it to the user.
+ * 
+ * Next update to add required tag
+ * 
+ * [
+ * 'label' => '', 
+ * 'name' => '', 
+ * 'hint' => '', 
+ * 'disabled' => false,
+ * 'checked' => false,
+ * 'mt' => '1', 
+ * 'mb' => '1', 
+ * 'style' => ''
+ * ]
+ * 
+ * @param array  $metadata   Block metadata.
+ * @return void
+ */
+function block_checkbox($metadata)
+{
+    $mt = (isset($metadata['mt'])) ? " mt" . $metadata['mt'] : " mt1";
+    $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb1";
+    $name = (isset($metadata['name'])) ? $metadata['name'] : "";
+    $label = (isset($metadata['label'])) ? $metadata['label'] : "";
+    $hint = (isset($metadata['hint'])) ? '<p class="fmg-ui-hint">' . $metadata['hint'] . '</p>' : "";
 
+    $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
+
+    if (isset($metadata['disabled']) && $metadata['disabled'] == true) {
+        $disabled_tag = ' disabled';
+    } else {
+        $disabled_tag = '';
+    }
+    if (isset($metadata['checked']) && $metadata['checked'] == true) {
+        $checked_tag = ' checked';
+    } else {
+        $checked_tag = '';
+    }
+
+    echo '<div class="fmg-ui-block' . $mt . $mb . '">';
+    echo '<label class="fmg-ui-checkbox-container">';
+    echo '<input type="checkbox" name="' . $name . '" ' . $checked_tag . ' class="fmg-ui-checkbox' .  $disabled_tag . '" ' . $custom_style . $disabled_tag . ' />';
+    echo '<span class="fmg-ui-checkmark"></span>';
+    echo $label;
+    echo '</label>';
+    echo $hint;
+    echo '</div>';
+}
+
+
+/**
+ * Generate the HTML code for a textarea block and style it as 
+ * needed using the metadata and echo it to the user.
+ * 
+ * Next update to add required tag
+ * 
+ * [
+ * 'label' => '', 
+ * 'text' => '', 
+ * 'name' => '', 
+ * 'hint' => '', 
+ * 'disabled' => false,
+ * 'align' => 'left', 
+ * 'mt' => '1', 
+ * 'mb' => '1', 
+ * 'style' => ''
+ * ]
+ * 
+ * @param array  $metadata   Block metadata.
+ * @return void
+ */
+function block_textarea($metadata)
+{
+    $mt = (isset($metadata['mt'])) ? " mt" . $metadata['mt'] : " mt2";
+    $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb2";
+    $name = (isset($metadata['name'])) ? $metadata['name'] : "";
+    $text = (isset($metadata['text'])) ? $metadata['text'] : "";
+    $label = (isset($metadata['label'])) ? $metadata['label'] : "";
+    $hint = (isset($metadata['hint'])) ? '<p class="fmg-ui-hint">' . $metadata['hint'] . '</p>' : "";
+    $align = (isset($metadata['align'])) ? " " . $metadata['align'] : "";
+
+    $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
+
+    if (isset($metadata['disabled']) && $metadata['disabled'] == true) {
+        $disabled_tag = ' disabled';
+    } else {
+        $disabled_tag = '';
+    }
+
+    echo '<div class="fmg-ui-block' . $mt . $mb . '">';
+    echo '<div class="fmg-ui-field-container">';
+    echo '<textarea name="' . $name . '" class="fmg-ui-textarea' . $align . $disabled_tag . '" id="input-' . $name . '" placeholder=" "' . $custom_style . $disabled_tag . ' />' . $text . '</textarea> ';
+    echo '<label for="input-' . $name . '" class="fmg-ui-textarea-label">' . $label . '</label>';
+    echo '</div>';
+    echo $hint;
+    echo '</div>';
+}
+
+
+/**
+ * Generate the HTML code for a checkbox block and style it as 
+ * needed using the metadata and echo it to the user.
+ * 
+ * Next update to add required tag
+ * 
+ * [
+ * 'label' => '', 
+ * 'name' => '', 
+ * 'hint' => '', 
+ * 'disabled' => false,
+ * 'checked' => false,
+ * 'mt' => '1', 
+ * 'mb' => '1', 
+ * 'style' => ''
+ * ]
+ * 
+ * @param array  $metadata   Block metadata.
+ * @return void
+ */
+function block_radio($metadata)
+{
+    $mt = (isset($metadata['mt'])) ? " mt" . $metadata['mt'] : " mt1";
+    $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb1";
+    $name = (isset($metadata['name'])) ? $metadata['name'] : "";
+    $label = (isset($metadata['label'])) ? $metadata['label'] : "";
+    $hint = (isset($metadata['hint'])) ? '<p class="fmg-ui-hint">' . $metadata['hint'] . '</p>' : "";
+
+    $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
+
+    if (isset($metadata['disabled']) && $metadata['disabled'] == true) {
+        $disabled_tag = ' disabled';
+    } else {
+        $disabled_tag = '';
+    }
+    if (isset($metadata['checked']) && $metadata['checked'] == true) {
+        $checked_tag = ' checked';
+    } else {
+        $checked_tag = '';
+    }
+
+    echo '<div class="fmg-ui-block' . $mt . $mb . '">';
+    echo '<label class="fmg-ui-radio-container">';
+    echo '<input type="radio" name="' . $name . '" ' . $checked_tag . ' class="fmg-ui-radio' .  $disabled_tag . '" ' . $custom_style . $disabled_tag . ' />';
+    echo '<span class="fmg-ui-radiomark"></span>';
+    echo $label;
+    echo '</label>';
+    echo $hint;
+    echo '</div>';
+}
