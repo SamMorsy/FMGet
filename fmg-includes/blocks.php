@@ -140,16 +140,16 @@ function block_separator($metadata)
     $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb1";
 
     if (isset($metadata['visible']) && $metadata['visible'] == true) {
-        $target = '<hr>';
+        $line_tag = '<hr>';
     } else {
-        $target = '';
+        $line_tag = '';
     }
 
     $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
 
     echo '<div class="fmg-ui-block' . $mt . $mb . '">';
     echo '<div class="fmg-ui-separator"' . $custom_style . '>';
-    echo $target;
+    echo $line_tag;
     echo '</div>';
     echo '</div>';
 }
@@ -562,5 +562,53 @@ function block_radio($metadata)
     echo $label;
     echo '</label>';
     echo $hint;
+    echo '</div>';
+}
+
+
+/**
+ * Generate the HTML code for an optional group block and style it as 
+ * needed using the metadata and echo it to the user.
+ *
+ * [
+ * 'show_text' => 'Show details', 
+ * 'hide_text' => 'Show less', 
+ * 'mt' => '1', 
+ * 'mb' => '1', 
+ * 'style' => ''
+ * ]
+ * 
+ * @param array  $metadata   Block metadata.
+ * @return void
+ */
+function block_group_open($metadata)
+{
+    $mt = (isset($metadata['mt'])) ? " mt" . $metadata['mt'] : " mt1";
+    $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb1";
+
+    $show_text = (isset($metadata['show_text'])) ? $metadata['show_text'] : 'Show details';
+    $hide_text = (isset($metadata['hide_text'])) ? $metadata['hide_text'] : 'Show less';
+
+    $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
+
+    echo '<div class="fmg-ui-block' . $mt . $mb . '">';
+    echo '<div class="fmg-ui-group-container"' . $custom_style . '>';
+    echo '<div class="fmg-ui-group-button" onclick="fmg_toggleGroup(this, \'' . $show_text . '\', \'' . $hide_text . '\')">';
+    echo '<span class="fmg-ui-group-arrow">&#129095;</span>';
+    echo '<span class="fmg-ui-group-toggle-text">' . $show_text . '</span>';
+    echo '</div>';
+    echo '<div class="fmg-ui-group">';
+}
+
+
+/**
+ * Generate the HTML closing code for an optional group block.
+ * 
+ * @return void
+ */
+function block_group_close()
+{
+    echo '</div>';
+    echo '</div>';
     echo '</div>';
 }

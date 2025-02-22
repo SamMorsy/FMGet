@@ -57,3 +57,19 @@ function fmg_dropdownselectOption(event) {
         event.currentTarget.classList.remove('active');
     }
 }
+
+function fmg_toggleGroup(button, show_text, hide_text) {
+    let details = button.nextElementSibling;
+    let toggleText = button.querySelector(".fmg-ui-group-toggle-text");
+    let toggleArrow = button.querySelector(".fmg-ui-group-arrow");
+    
+    if (details.style.maxHeight) {
+        details.style.maxHeight = null;
+        toggleText.textContent = "Show details";
+        toggleArrow.innerHTML = "&#129095;";
+    } else {
+        details.style.maxHeight = details.scrollHeight + "px";
+        toggleText.textContent = "Show less";
+        toggleArrow.innerHTML = "&#129093;";
+    }
+}

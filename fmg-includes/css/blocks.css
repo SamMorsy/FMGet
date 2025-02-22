@@ -632,3 +632,32 @@ body {
     border-radius: 50%;
     transition: all 0.3s ease;
 }
+
+
+/* group block */
+.fmg-ui-group-container {
+    display: flex;
+    flex-direction: column;
+}
+.fmg-ui-group-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    user-select: none;
+    order: 2;
+    color: #005d76;
+}
+.fmg-ui-group {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease-out;
+    order: 1;
+}
+.fmg-ui-group-arrow {
+    margin-left: 5px;
+    transition: transform 0.3s;
+}
+.fmg-ui-group-toggle-text{
+    font-size: 13px;
+}
