@@ -19,6 +19,7 @@ if (!defined('ABSPATH')) {
 
 require ABSPATH . 'fmg-load.php';
 require_once ABSPATH . 'fmg-admin/functions.php';
+require_once ABSPATH . FMGINC . '/blocks.php';
 
 // Find fmg-config-sample.php
 if (file_exists(ABSPATH . 'fmg-config-sample.php')) {
@@ -101,8 +102,9 @@ if (file_exists(ABSPATH . FMGINC . '/languages/translations.php')) {
 }
 
 switch ($step) {
+    //Step -1 Select language 
     case -1:
-        setup_config_display_header("FMGet Setup");
+        page_admin_start('Setup', false, true, true);
 
         $html = "";
         $chunkSize = 8;
@@ -113,44 +115,192 @@ switch ($step) {
             $html .= "<ul class=\"language-list\">\n";
 
             foreach ($chunk as $langCode => $langName) {
-                $html .= "    <li><a href=\"setup-config.php?step=0&lang={$langCode}\">{$langName}</a></li>\n";
+                $html .= "    <li><a target=\"_self\" class=\"fmg-ui-link\" href=\"fmg-admin/setup-config.php?step=0&lang={$langCode}\">{$langName}</a></li>\n";
             }
 
             $html .= "</ul>\n";
             $html .= "</div>\n";
         }
-
+        block_row_open([
+            'align' => 'center',
+        ]);
+        block_column_open([
+            'size' => 8,
+        ]);
         echo $html;
-        setup_config_display_footer();
+        block_column_close();
+        block_row_close();
+        page_admin_end(true);
         break;
-
+    //Step 0 FMGet requirements
     case 0:
         // Check if language is selected and is available then load the language admin file
         $language_code = isset($_GET['lang']) ? $_GET['lang'] : '';
         fmg_load_language($language_code, 'admin');
 
-        setup_config_display_header("FMGet Setup");
+        page_admin_start('Setup', false, true, true);
+        block_row_open([
+            'align' => 'center',
+        ]);
+        block_column_open([
+            'size' => 8,
+        ]);
         // 1-welcome message
-        echo "<p>" . txt('setup_welcome') . "</p>";
-        // 3-Instructions on the requirments
-        echo '<ul class="items-list"><li>';
-        echo txt('setup_req_ssl');
-        echo '</li><li>';
-        echo txt('setup_req_php');
-        echo '</li><li>';
-        echo txt('setup_req_fms');
-        echo '</li><li>';
-        echo txt('setup_req_api');
-        echo '</li><li>';
-        echo txt('setup_req_acc');
-        echo '</li></ul>';
-        echo "<p>" . txt('setup_intro1') . "<br><a href=\"https://fmget.com/getting-started.html\" target=\"_blank\">" . txt('setup_intro2') . "</a>" . "</p>";
-        echo "<a href=\"setup-config.php?step=1&lang={$language_code}\" class=\"fmg-button\">" . txt('setup_button_install') . "</a>";
-        echo "<a href=\"setup-config.php\">" . txt('setup_back1') . "</a>";
-        setup_config_display_footer();
-        break;
+        block_title([
+            'text' => txt('setup_welcome'),
+            'size' => 2,
+        ]);
+        block_separator([
+            'visible' => true,
+        ]);
+        block_text([
+            'text' => txt('setup_req_ssl'),
+            'size' => 2,
+        ]);
+        block_text([
+            'text' => txt('setup_req_php'),
+            'size' => 2,
+        ]);
+        block_text([
+            'text' => txt('setup_req_fms'),
+            'size' => 2,
+        ]);
+        block_text([
+            'text' => txt('setup_req_api'),
+            'size' => 2,
+        ]);
+        block_text([
+            'text' => txt('setup_req_acc'),
+            'size' => 2,
+        ]);
+        block_separator([
+            'mt' => 4,
+            'mb' => 4,
+        ]);
+        block_text([
+            'text' => txt('setup_intro1'),
+            'size' => 3,
+        ]);
+        block_link([
+            'text' => txt('setup_intro2'),
+            'external' => true,
+            'url' => 'https://fmget.com/getting-started.html'
+        ]);
+        block_separator([
+            'mt' => 4,
+            'mb' => 4,
+        ]);
+        echo "<a href=\"fmg-admin/setup-config.php?step=1&lang={$language_code}\" class=\"fmg-button\">" . txt('setup_button_install') . "</a>";
+        block_link([
+            'text' => txt('setup_back1'),
+            'url' => 'fmg-admin/setup-config.php'
+        ]);
 
+        block_column_close();
+        block_row_close();
+        page_admin_end(true);
+        break;
+    //Step 1 Configuations entry
     case 1:
+        // Check if language is selected and is available then load the language admin file
+        $language_code = isset($_GET['lang']) ? $_GET['lang'] : '';
+        fmg_load_language($language_code, 'admin');
+
+        page_admin_start('Setup', false, true, true);
+        block_row_open([
+            'align' => 'center',
+        ]);
+        block_column_open([
+            'size' => 8,
+        ]);
+
+        block_title([
+            'text' => txt('setup_config_title'),
+            'size' => 2,
+        ]);
+        block_separator([
+            'visible' => true,
+        ]);
+        block_text([
+            'text' => txt('setup_config_details1'),
+            'size' => 2,
+        ]);
+        block_field([
+            'label' => txt('setup_config_fmserver_label'),
+            'name' => 'fm_server',
+            'hint' => txt('example') . ': fms.example.com',
+            'type' => 'text',
+            'mt' => '4',
+            'mb' => '4',
+        ]);
+        block_text([
+            'text' => txt('setup_config_fmserver_info1'),
+            'size' => 2,
+        ]);
+        block_text([
+            'text' => txt('setup_config_fmserver_info2'),
+            'size' => 2,
+        ]);
+
+        block_field([
+            'label' => txt('setup_config_title_label'),
+            'name' => 'fmg_title',
+            'hint' => txt('example') . ': FMGet',
+            'type' => 'text',
+            'mt' => '4',
+            'mb' => '3',
+        ]);
+        block_menufield([
+            'label' => txt('setup_config_timezone_label'),
+            'text' => '',
+            'name' => 'timezone',
+            'hint' => txt('example') . ': zone 1',
+            'mt' => '4',
+            'mb' => '3',
+        ], [
+            'zone 1',
+            'zone 2',
+        ]);
+        block_menufield([
+            'label' => txt('setup_config_dateformat_label'),
+            'text' => '',
+            'name' => 'fmg_dateformat',
+            'hint' => txt('example') . ': mm-dd-yyyy',
+            'mt' => '4',
+            'mb' => '3',
+        ], [
+            'mm-dd-yyyy',
+            'dd-mm-yyyy',
+        ]);
+        block_field([
+            'label' => txt('setup_config_username_label'),
+            'name' => 'fmg_username',
+            'hint' => txt('example') . ': johnDoe25',
+            'type' => 'text',
+            'mt' => '4',
+            'mb' => '3',
+        ]);
+        block_field([
+            'label' => txt('setup_config_password_label'),
+            'name' => 'fmg_password',
+            'hint' => txt('example') . ': Bras1l@23',
+            'type' => 'text',
+            'mt' => '4',
+            'mb' => '3',
+        ]);
+        block_field([
+            'label' => txt('setup_config_email_label'),
+            'name' => 'fmg_email',
+            'hint' => txt('example') . ': info@example.com',
+            'type' => 'text',
+            'mt' => '4',
+            'mb' => '3',
+        ]);
+        block_column_close();
+        block_row_close();
+        page_admin_end(true);
+        break;
+    case 3:
         $language_code = isset($_GET['lang']) ? $_GET['lang'] : '';
         fmg_load_language($language_code, 'admin');
 
@@ -194,9 +344,6 @@ switch ($step) {
         $root_domain = fmg_guess_url();
         $fmg_lang = fmg_check_language_code($language_code);
 
-        // Generate the code for FileMaker Web Viewer Access
-        $wv_code = generate_wv_code($authKey1, $authKey2, $authKey3);
-
         // rename the config file and fill it with the auth keys and the selected language code and the current domain
         // Write to a new file named 'fmg-config.php'
         $config_content = implode("", $config_file);
@@ -225,25 +372,6 @@ switch ($step) {
 
 
         //Show page
-        setup_config_display_header(txt('setup_welcome_title'));
-        echo '<p>' . txt('setup_vw_details1') . '</p>';
-        echo '<p><strong>' . txt('setup_vw_details2') . '</strong></p>';
-        echo '<div class="codebox-container">';
-        echo '    <a class="codebox-button">' . txt('setup_button_copy') . '</a>';
-        echo '    <div class="codebox-message">' . txt('setup_copied') . '</div>';
-        echo '    <div class="codebox-box">' . $wv_code . '</div>'; // Sanitized WV code
-        echo '</div>';
-        echo '<p class="warning"><b>' . txt('setup_vw_important') . ':</b> ' . txt('setup_vw_warning1') . '</p>';
-        echo '<p class="warning"><b>Important:</b> ' . txt(text: 'setup_vw_warning2') . '</p>';
-        echo '<p>' . txt('setup_vw_details3') . '</p>';
-        echo '<ul class="items-list"><li>';
-        echo txt('setup_vw_options1');
-        echo '</li><li>';
-        echo txt('setup_vw_options2');
-        echo '</li></ul>';
-        echo '<p>' . txt('setup_vw_size1') . ' <strong>' . txt('setup_vw_size2') . '</strong></p>';
-        echo '<p>' . txt('setup_vw_details4') . '</p>';
-        echo '<div class="section-row-photo"><img src="images/setup-filemaker-webviewer-config.png"></div>';
-        setup_config_display_footer();
+
         break;
 }

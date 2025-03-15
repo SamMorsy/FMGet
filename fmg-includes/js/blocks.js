@@ -40,19 +40,32 @@ function fmg_dropdownshow(inputElement) {
     dropdownMenu.classList.add('active');
 }
 
-function fmg_dropdownhide(inputElement) {
+function fmg_dropdownhide(inputElement, event) {
     const dropdownContainer = inputElement.closest('.fmg-ui-field-container.menu');
     const dropdownMenu = dropdownContainer.querySelector('.fmg-ui-field-options');
-    setTimeout(() => {
-        dropdownMenu.classList.remove('active');
-    }, 200);
+
+    // Check if relatedTarget is inside the dropdown OR if the event target is inside the dropdown options
+    if (event.relatedTarget && dropdownContainer.contains(event.relatedTarget)) {
+        return; // Do nothing if focus moves within the container
+    }
+
+    if (dropdownMenu.contains(event.target)) {
+        return; // Do nothing if the click happened inside the dropdown menu
+    }
+
+    // Hide dropdown if click happened outside
+    dropdownMenu.classList.remove('active');
+    console.log("Canceloo");
 }
+
 
 function fmg_dropdownselectOption(event) {
     const dropdownContainer = event.currentTarget.closest('.fmg-ui-field-container.menu');
     const inputElement = dropdownContainer.querySelector('input');
+    console.log("Finding the input");
 
     if (event.target.tagName === 'DIV') {
+        console.log("Replacing with " + event.target.textContent);
         inputElement.value = event.target.textContent;
         event.currentTarget.classList.remove('active');
     }
@@ -62,7 +75,7 @@ function fmg_toggleGroup(button, show_text, hide_text) {
     let details = button.nextElementSibling;
     let toggleText = button.querySelector(".fmg-ui-group-toggle-text");
     let toggleArrow = button.querySelector(".fmg-ui-group-arrow");
-    
+
     if (details.style.maxHeight) {
         details.style.maxHeight = null;
         toggleText.textContent = "Show details";

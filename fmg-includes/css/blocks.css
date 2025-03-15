@@ -144,6 +144,7 @@ body {
 .fmg-ui-link {
     color: #005d76;
     text-decoration: none;
+    font-size: 13px;
 }
 
 /* message block */
@@ -656,6 +657,7 @@ body {
 }
 .fmg-ui-group-arrow {
     margin-left: 5px;
+    margin-right: 10px;
     transition: transform 0.3s;
 }
 .fmg-ui-group-toggle-text{

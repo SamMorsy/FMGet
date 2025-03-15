@@ -15,7 +15,7 @@
  *
  * [
  * 'text' => '', 
- * 'siza' => '3', 
+ * 'size' => '3', 
  * 'level' => '2', 
  * 'align' => 'left', 
  * 'mt' => '4', 
@@ -50,7 +50,7 @@ function block_title($metadata)
  *
  * [
  * 'text' => '', 
- * 'siza' => '2', 
+ * 'size' => '2', 
  * 'align' => 'left', 
  * 'mt' => '0', 
  * 'mb' => '0', 
@@ -107,7 +107,7 @@ function block_link($metadata)
         $target = ' target="_blank"';
     } else {
         $ext_icon = '';
-        $target = '';
+        $target = ' target="_self"';
     }
 
     $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
@@ -257,7 +257,6 @@ function block_column_close()
  * needed using the metadata and echo it to the user.
  *
  * [
- * 'size' => '6',
  * 'align' => 'left', 
  * 'mt' => '0', 
  * 'mb' => '0', 
@@ -397,7 +396,7 @@ function block_menufield($metadata, $options)
     echo '<input type="' . $type . '" name="' . $name . '" value="' . $text . '" class="fmg-ui-field' . $align . $disabled_tag . '" id="input-' . $name . '" placeholder=" "' . $custom_style . $disabled_tag . ' ';
     echo 'oninput="fmg_dropdownfilterOptions(this)" ';
     echo 'onfocus="fmg_dropdownshow(this)" ';
-    echo 'onblur="fmg_dropdownhide(this)" ' . $required_attr . '>';
+    echo 'onblur="fmg_dropdownhide(this, event)" ' . $required_attr . '>';
     echo '<label for="input-' . $name . '" class="fmg-ui-field-label">' . $label . '</label>';
     echo '<div class="fmg-ui-field-options" onclick="fmg_dropdownselectOption(event)">';
 

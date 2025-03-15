@@ -5,6 +5,21 @@
  * @package FMGet
  */
 
+ /**
+ * Polyfill the function str_contains if not available.
+ * The function is available natively with PHP 8, it is wrapped in a function_exists() check.
+ * 
+ * 
+ * @param string $haystack		The string to search in.
+ * @param string $needle        The substring to search for in the haystack.
+ * 
+ * @return bool True if the substring is found, otherwise false.
+ */
+if (!function_exists('str_contains')) {
+    function str_contains($haystack, $needle) {
+        return $needle !== '' && mb_strpos($haystack, $needle) !== false;
+    }
+}
 
  /**
  * Checks for the required PHP version.

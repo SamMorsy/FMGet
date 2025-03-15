@@ -121,12 +121,16 @@ HTML;
 /**
  * Generate the HTML header for the admin area
  *
- * @param string    $title      Field name to pick from metadata.
- * @param boolean   $sidebar    Optional. Index of the script to register when multiple items passed.
+ * @param string    $title      The page title that will appear on the browser windows/tabs.
+ * @param boolean   $sidebar    Optional. Option to show/hide the side bar.
  *                              Default true.
+ * @param boolean   $mainbar    Optional. Option to show/hide the main bar.
+ *                              Default true.
+ * @param boolean   $setup_css  Optional. Option to include the setup css file.
+ *                              Default false.
  * @return void
  */
-function page_admin_start($title = "", $sidebar = true)
+function page_admin_start($title = "", $sidebar = true, $mainbar = true, $setup_css = false)
 {
 
     ?>
@@ -138,22 +142,28 @@ function page_admin_start($title = "", $sidebar = true)
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="robots" content="noindex,nofollow" />
         <link rel="icon" href="data:," />
-        <title>FMGet - Dashboard</title>
+        <base href="<?php echo fmg_guess_url() ; ?>/" target="_blank">
+        <title>FMGet - <?php echo $title; ?></title>
         <link rel='stylesheet' href='fmg-admin/css/admin.css' type='text/css' />
+        <?php if ($setup_css) { ?>
+        <link rel='stylesheet' href='fmg-admin/css/setup.css' type='text/css' />
+        <?php } ?>
         <link rel='stylesheet' href='fmg-includes/css/blocks.css' type='text/css' />
     </head>
 
     <body>
-        <div class="fmg-ui-header">
-            <div class="fmg-ui-header-group">
-                <?php if ($sidebar) { ?>
-                    <span class="fmg-ui-menu-btn" onclick="toggleSidebar()">&#9776;</span>
-                <?php } ?>
-                <strong><?php echo $title; ?></strong>
+        <?php if ($mainbar) { ?>
+            <div class="fmg-ui-header">
+                <div class="fmg-ui-header-group">
+                    <?php if ($sidebar) { ?>
+                        <span class="fmg-ui-menu-btn" onclick="toggleSidebar()">&#9776;</span>
+                    <?php } ?>
+                    <strong><?php echo $title; ?></strong>
+                </div>
+                <div class="fmg-ui-header-group">Powered by <a class="fmg-ui-link" target="_blank"
+                        href="https://fmget.com">FMGet</a></div>
             </div>
-            <div class="fmg-ui-header-group">Powered by <a class="fmg-ui-link" target="_blank"
-                    href="https://fmget.com">FMGet</a></div>
-        </div>
+        <?php } ?>
         <?php if ($sidebar) { ?>
             <div class="fmg-ui-sidebar" id="sidebar">
                 <p>Sidebar content</p>
@@ -169,16 +179,19 @@ function page_admin_start($title = "", $sidebar = true)
 /**
  * Generate the HTML footer for the admin area
  *
- *
+ * @param boolean   $setup_js       Optional. Option to include the setup JS file.
+ *                                  Default false.
+ * 
  * @return void
  */
-function page_admin_end()
+function page_admin_end($setup_js = false)
 {
 
     ?>
         </div>
-
-        <script src="fmg-admin/js/admin.js"></script>
+        <?php if ($setup_js) { ?>
+            <script src="fmg-admin/js/setup.js"></script>
+        <?php } ?>
         <script src="fmg-includes/js/blocks.js"></script>
     </body>
 
