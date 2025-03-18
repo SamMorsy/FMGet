@@ -93,7 +93,7 @@ function fmg_is_ssl() {
 /**
  * Guesses the URL for the site.
  *
- * Will remove fmg-admin links to retrieve only return URLs not in the fmg-admin
+ * Will remove admin links to retrieve only return URLs not in the admin
  * directory.
  * Updated to work with defined url and with localhost
  *
@@ -103,21 +103,21 @@ function fmg_guess_url() {
 	if ( defined( 'FMG_SITEURL' ) && '' !== FMG_SITEURL ) {
 		$url = FMG_SITEURL;
 	} else {
-		$abspath_fix         = str_replace( '\\', '/', ABSPATH );
+		$FMGROOT_fix         = str_replace( '\\', '/', FMGROOT );
 		$script_filename_dir = dirname( $_SERVER['SCRIPT_FILENAME'] );
 
 		// The request is for the admin.
-		if ( str_contains( $_SERVER['REQUEST_URI'], 'fmg-admin' ) || str_contains( $_SERVER['REQUEST_URI'], 'fmg-admin.php' ) ) {
-			$path = preg_replace( '#/(fmg-admin/?.*|fmg-admin\.php.*)#i', '', $_SERVER['REQUEST_URI'] );
+		if ( str_contains( $_SERVER['REQUEST_URI'], 'admin' ) || str_contains( $_SERVER['REQUEST_URI'], 'admin.php' ) ) {
+			$path = preg_replace( '#/(admin/?.*|admin\.php.*)#i', '', $_SERVER['REQUEST_URI'] );
 		} else {
-			if ( str_contains( $_SERVER['SCRIPT_FILENAME'], $abspath_fix ) ) {
-				// Request is hitting a file inside ABSPATH.
-				$directory = str_replace( ABSPATH, '', $script_filename_dir );
+			if ( str_contains( $_SERVER['SCRIPT_FILENAME'], $FMGROOT_fix ) ) {
+				// Request is hitting a file inside FMGROOT.
+				$directory = str_replace( FMGROOT, '', $script_filename_dir );
 				// Strip off the subdirectory, and any file/query params.
 				$path = preg_replace( '#/' . preg_quote( $directory, '#' ) . '/[^/]*$#i', '', $_SERVER['REQUEST_URI'] );
-			} elseif ( str_contains( $abspath_fix, $script_filename_dir ) ) {
-				// Request is hitting a file above ABSPATH.
-				$subdirectory = substr( $abspath_fix, strpos( $abspath_fix, $script_filename_dir ) + strlen( $script_filename_dir ) );
+			} elseif ( str_contains( $FMGROOT_fix, $script_filename_dir ) ) {
+				// Request is hitting a file above FMGROOT.
+				$subdirectory = substr( $FMGROOT_fix, strpos( $FMGROOT_fix, $script_filename_dir ) + strlen( $script_filename_dir ) );
 				// Strip off any file/query params from the path, appending the subdirectory to the installation.
 				$path = preg_replace( '#/[^/]*$#i', '', $_SERVER['REQUEST_URI'] ) . $subdirectory;
 			} else {

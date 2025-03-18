@@ -14,7 +14,7 @@
  */
 function config_update($updates)
 {
-    $configFile = ABSPATH . 'fmg-config.php';
+    $configFile = FMGROOT . 'fmg-config.php';
 
     if (!file_exists($configFile)) {
         return false;
@@ -69,7 +69,7 @@ function generate_random($length = 20)
 function generate_wv_code($authKey1, $authKey2, $authKey3)
 {
     global $fmg_version;
-    $adminLink = fmg_guess_url() . '/fmg-admin.php?action=connect';
+    $adminLink = fmg_guess_url() . '/admin.php?action=connect';
 
     //Formatted the code to be ready for the FileMaker calculation engine, Open heredoc
     $html = <<<HTML
@@ -144,11 +144,11 @@ function page_admin_start($title = "", $sidebar = true, $mainbar = true, $setup_
         <link rel="icon" href="data:," />
         <base href="<?php echo fmg_guess_url() ; ?>/" target="_blank">
         <title>FMGet - <?php echo $title; ?></title>
-        <link rel='stylesheet' href='fmg-admin/css/admin.css' type='text/css' />
+        <link rel='stylesheet' href='admin/css/admin.css' type='text/css' />
         <?php if ($setup_css) { ?>
-        <link rel='stylesheet' href='fmg-admin/css/setup.css' type='text/css' />
+        <link rel='stylesheet' href='admin/css/setup.css' type='text/css' />
         <?php } ?>
-        <link rel='stylesheet' href='fmg-includes/css/blocks.css' type='text/css' />
+        <link rel='stylesheet' href='includes/css/blocks.css' type='text/css' />
     </head>
 
     <body>
@@ -190,9 +190,9 @@ function page_admin_end($setup_js = false)
     ?>
         </div>
         <?php if ($setup_js) { ?>
-            <script src="fmg-admin/js/setup.js"></script>
+            <script src="admin/js/setup.js"></script>
         <?php } ?>
-        <script src="fmg-includes/js/blocks.js"></script>
+        <script src="includes/js/blocks.js"></script>
     </body>
 
     </html>

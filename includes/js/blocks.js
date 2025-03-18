@@ -35,9 +35,26 @@ function fmg_dropdownfilterOptions(inputElement) {
 }
 
 function fmg_dropdownshow(inputElement) {
+    const parentBlock = inputElement.closest('.fmg-ui-block');
     const dropdownContainer = inputElement.closest('.fmg-ui-field-container.menu');
     const dropdownMenu = dropdownContainer.querySelector('.fmg-ui-field-options');
     dropdownMenu.classList.add('active');
+
+    // Remove any previous event listener before adding a new one
+    document.removeEventListener('click', handleOutsideClick);
+
+    // Define the event handler function
+    function handleOutsideClick(event) {
+        if (!parentBlock.contains(event.target)) {
+            dropdownMenu.classList.remove('active');
+            document.removeEventListener('click', handleOutsideClick);
+        }
+    }
+
+    // Add the event listener to detect clicks outside
+    setTimeout(() => {
+        document.addEventListener('click', handleOutsideClick);
+    }, 0);
 }
 
 function fmg_dropdownhide(inputElement, event) {
@@ -85,4 +102,8 @@ function fmg_toggleGroup(button, show_text, hide_text) {
         toggleText.textContent = "Show less";
         toggleArrow.innerHTML = "&#129093;";
     }
+}
+
+function fmg_goToLink(target_link) {
+    window.location.href = target_link;
 }

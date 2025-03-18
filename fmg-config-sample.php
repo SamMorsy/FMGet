@@ -6,7 +6,7 @@
  *
  * * FileMaker server and database settings
  * * Secret keys
- * * ABSPATH
+ * * FMGROOT
  * 
  * Any changes in this file can break the connection between the website and the FileMaker server.
  * 
@@ -65,7 +65,7 @@ define( 'AUTH_KEY3',         'put your unique phrase here' );
 define( 'LOGGED_IN_KEY',     'put your unique phrase here' );
 
 /** Absolute path to the FMGet directory. */
-if ( ! defined( 'ABSPATH' ) ) {
-	define( 'ABSPATH', __DIR__ . '/' );
+if ( ! defined( 'FMGROOT' ) ) {
+	define( 'FMGROOT', __DIR__ . '/' );
 }
 

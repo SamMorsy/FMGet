@@ -12,7 +12,7 @@ return [
 
     "setup_button_install" => "Install FMGet",
 
-    "setup_intro1" => "This information is being used to create a fmg-config.php file. Need more help with configuring your website and FileMaker server?",
+    "setup_intro1" => "Need more help with configuring your website and FileMaker server?",
     "setup_intro2" => "Read the support article on setup.",
 
     "setup_error_ssl" => "SSL certificate wasn't detected, usually it's supplied to you by your web host. If you do not have it enabled, then you will need to contact them before you can continue.",
@@ -32,13 +32,20 @@ return [
 
     "setup_config_title" => "FMGet Configurations",
     "example" => "Example",
-    "setup_config_fmserver_info1" => "The web address for your FileMaker server, Without leading www or https:// or trailing slashes",
-    "setup_config_fmserver_info2" => "IP address are not allowed, The address must be a public domain",
+    "try_again" => "Try Again",
+    "continue" => "Continue",
+    "setup_config_fmserver_hint" => "The web address for your FileMaker server, Without leading www or https:// or trailing slashes, IP address are not allowed, The address must be a public domain.",
     "setup_config_fmserver_label" => "FileMaker Server Address",
-    "setup_config_title_label" => "Site Title",
     "setup_config_timezone_label"=> "Timezone",
     "setup_config_dateformat_label"=> "Date Format",
-    "setup_config_username_label"=> "Username",
-    "setup_config_password_label"=> "Password",
-    "setup_config_email_label"=> "E-mail Address",
+    "setup_config_username_label"=> "FMGet Admin Username",
+    "setup_config_username_hint" => "Username can have only alphanumeric characters, underscores, spaces, periods and hyphens.",
+    "setup_config_password_label"=> "FMGet Admin Password",
+    "setup_config_password_hint"=> "You will need this password to manage your FMGet, Please store it in a secure location.",
+    "setup_config_email_label"=> "FMGet Admin Email Address",
+    "setup_config_email_hint"=> "Double check your email address before continuing.",
+
+    "setup_error_title" => "Error",
+    "setup_error_fmserver_error" => "This FM Server address is not valid, please check again.",
+    "setup_error_fmserver_required" => "The FM Server address is required to install FMGet.",
 ];

@@ -11,7 +11,7 @@
 
 
 // Don't load directly.
-if (!defined('ABSPATH')) {
+if (!defined('FMGROOT')) {
     exit();
 }
 ?>

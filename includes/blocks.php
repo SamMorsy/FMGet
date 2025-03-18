@@ -395,8 +395,7 @@ function block_menufield($metadata, $options)
     echo '<div class="fmg-ui-field-container menu">';
     echo '<input type="' . $type . '" name="' . $name . '" value="' . $text . '" class="fmg-ui-field' . $align . $disabled_tag . '" id="input-' . $name . '" placeholder=" "' . $custom_style . $disabled_tag . ' ';
     echo 'oninput="fmg_dropdownfilterOptions(this)" ';
-    echo 'onfocus="fmg_dropdownshow(this)" ';
-    echo 'onblur="fmg_dropdownhide(this, event)" ' . $required_attr . '>';
+    echo 'onfocus="fmg_dropdownshow(this)" ' . $required_attr . '>';
     echo '<label for="input-' . $name . '" class="fmg-ui-field-label">' . $label . '</label>';
     echo '<div class="fmg-ui-field-options" onclick="fmg_dropdownselectOption(event)">';
 
@@ -610,4 +609,105 @@ function block_group_close()
     echo '</div>';
     echo '</div>';
     echo '</div>';
+}
+
+
+/**
+ * Generate the HTML code for a button block and style it as 
+ * needed using the metadata and echo it to the user.
+ *
+ * [
+ * 'text' => '',
+ * 'type' => '',
+ * 'target' => '',
+ * 'mt' => '1', 
+ * 'mb' => '1', 
+ * 'style' => ''
+ * ]
+ * 
+ * @param array  $metadata   Block metadata.
+ * @return void
+ */
+function block_buttonbasic($metadata)
+{
+    $mt = (isset($metadata['mt'])) ? " mt" . $metadata['mt'] : " mt1";
+    $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb1";
+    $text = (isset($metadata['text'])) ? $metadata['text'] : "";
+    $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
+
+    $type = (isset($metadata['type'])) ? $metadata['type'] : "submit";
+    $target = (isset($metadata['target'])) ? $metadata['target'] : "";
+
+    echo '<div class="fmg-ui-block' . $mt . $mb . '">';
+
+    if ($type == "js") {
+        echo '<button type="button" onclick="' . $target . '" class="fmg-ui-button-basic"' . $custom_style . '>';
+    } elseif ($type == "link") {
+        echo '<button type="button" onclick="fmg_goToLink(\'' . $target . '\')" class="fmg-ui-button-basic"' . $custom_style . '>';
+    } else {
+        echo '<button type="submit" class="fmg-ui-button-basic"' . $custom_style . '>';
+    }
+    
+    echo $text;
+    echo '</button>';
+    echo '</div>';
+}
+
+
+/**
+ * Generate the HTML code for a input form and Add options as 
+ * needed using the metadata and echo it to the user.
+ *
+ * [
+ * 'action' => '', 
+ * 'method' => '',
+ * 'name' => ''
+ * ]
+ * 
+ * @param array  $metadata   Block metadata.
+ * @return void
+ */
+function block_form_open($metadata)
+{
+
+    $action = (isset($metadata['action'])) ? ' action="' . $metadata['action'] . '"' : "";
+    $method = (isset($metadata['method'])) ? $metadata['method'] : "post";
+    $name = (isset($metadata['name'])) ? ' name="' . $metadata['name'] . '"' : "";
+
+    echo '<!-- open form -->';
+    echo '<form target="_self" method="' . $method . '"' . $name  . $action . '>';
+}
+
+
+/**
+ * Generate the HTML closing code for an input form.
+ * 
+ * @return void
+ */
+function block_form_close()
+{
+    echo '</form>';
+    echo '<!-- close form -->';
+}
+
+
+/**
+ * Generate the HTML code for a hidden input field and Add options as 
+ * needed using the metadata and echo it to the user.
+ *
+ * [
+ * 'value' => '', 
+ * 'name' => ''
+ * ]
+ * 
+ * @param array  $metadata   Block metadata.
+ * @return void
+ */
+function block_hidden_field($metadata)
+{
+
+    $value = (isset($metadata['value'])) ? ' value="' . $metadata['value'] . '"' : "";
+    $name = (isset($metadata['name'])) ? ' name="' . $metadata['name'] . '"' : "";
+
+    echo '<input type="hidden"' . $name . $value . '>';
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Loading file for setting the ABSPATH constant
+ * Loading file for setting the FMGROOT constant, Start / resume the session
  * and loading the fmg-config.php file. The fmg-config.php
  * file will then load the FileMaker server details and other global constants
  * which will then set up the FMGet environment.
@@ -12,9 +12,11 @@
  * @package FMGet
  */
 
-/** Define ABSPATH as this file's directory */
-if (!defined('ABSPATH')) {
-    define('ABSPATH', __DIR__ . '/');
+ session_start();
+
+/** Define FMGROOT as this file's directory */
+if (!defined('FMGROOT')) {
+    define('FMGROOT', __DIR__ . '/');
 }
 
 /*
@@ -26,7 +28,7 @@ if (function_exists('error_reporting')) {
 }
 
 // Define the include folder.
-define('FMGINC', 'fmg-includes');
+define('FMGINC', 'includes');
 
 
 /**
@@ -39,13 +41,13 @@ $fmg_translations = [];
  * If fmg-config.php exists in the FMGet root, load fmg-config.php.
  * If the condition is true, initiate loading the setup process.
  */
-if (file_exists(ABSPATH . 'fmg-config.php')) {
+if (file_exists(FMGROOT . 'fmg-config.php')) {
 
     /** The config file exists */
-    require_once ABSPATH . 'fmg-config.php';
+    require_once FMGROOT . 'fmg-config.php';
 
-    require_once ABSPATH . FMGINC . '/version.php';
-    require_once ABSPATH . FMGINC . '/functions.php';
+    require_once FMGROOT . FMGINC . '/version.php';
+    require_once FMGROOT . FMGINC . '/functions.php';
 
     // Check for the required PHP version.
     fmg_check_server();
@@ -62,16 +64,16 @@ if (file_exists(ABSPATH . 'fmg-config.php')) {
 } else {
 
     // A config file doesn't exist.
-    require_once ABSPATH . FMGINC . '/version.php';
-    require_once ABSPATH . FMGINC . '/functions.php';
+    require_once FMGROOT . FMGINC . '/version.php';
+    require_once FMGROOT . FMGINC . '/functions.php';
 
-    define('FMGADM', 'fmg-admin');
+    define('FMGADM', 'admin');
     // Check for the required PHP version.
     fmg_check_server();
 
-    define('FMG_CONTENT_DIR', ABSPATH . 'fmg-content');
+    define('FMG_CONTENT_DIR', FMGROOT . 'fmg-content');
 
-    $path = fmg_guess_url() . '/fmg-admin/setup-config.php';
+    $path = fmg_guess_url() . '/admin/setup-config.php';
 
     // Redirect to setup-config.php.
     if (!str_contains($_SERVER['REQUEST_URI'], 'setup-config')) {

@@ -12,7 +12,7 @@
  *
  * Hold the list of languages available for this version of FMGet.
  * 
- * Extra languages can be added be adding their files to /fmg-includes/languages
+ * Extra languages can be added be adding their files to /includes/languages
  * and adding their details to this array.
  *
  * @global array $fmg_languages
@@ -70,7 +70,7 @@ function fmg_load_language($language_code = '', $category = 'apps'){
         $language_clean_code = 'en-us';
     }
 
-    $language_path = ABSPATH . FMGINC . '/languages/' . $language_clean_code . '/lang-' . $category . '.php';
+    $language_path = FMGROOT . FMGINC . '/languages/' . $language_clean_code . '/lang-' . $category . '.php';
 
     if (file_exists($language_path)) {
         $fmg_translations = include $language_path;
@@ -103,7 +103,7 @@ function fmg_check_language_code($language_code){
         $language_clean_code = 'en-us';
     }
 
-    $language_path = ABSPATH . FMGINC . '/languages/' . $language_clean_code . '/lang-admin.php';
+    $language_path = FMGROOT . FMGINC . '/languages/' . $language_clean_code . '/lang-admin.php';
 
     if (!file_exists($language_path)) {
         $language_clean_code = 'en-us';
