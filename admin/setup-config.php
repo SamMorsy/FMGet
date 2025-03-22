@@ -607,7 +607,7 @@ switch ($step) {
                 config_update($updates_for_config);
 
                 // Clear setup session data
-                //unset($_SESSION['post_data']);
+                unset($_SESSION['post_data']);
             }
         }
 
