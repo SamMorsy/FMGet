@@ -169,7 +169,7 @@ function block_separator($metadata)
  */
 function block_message($metadata)
 {
-    $text = (isset($metadata['text'])) ? $metadata['text'] : "";
+    $text = (isset($metadata['text'])) ? htmlspecialchars($metadata['text']) : "";
     $type = (isset($metadata['type'])) ? $metadata['type'] : "default";
 
     echo '<script>';
@@ -199,7 +199,7 @@ function block_note($metadata)
 {
     $mt = (isset($metadata['mt'])) ? " mt" . $metadata['mt'] : " mt1";
     $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb1";
-    $text = (isset($metadata['text'])) ? $metadata['text'] : "";
+    $text = (isset($metadata['text'])) ? htmlspecialchars($metadata['text']) : "";
     $type = (isset($metadata['type'])) ? " " . $metadata['type'] : " default";
     $align = (isset($metadata['align'])) ? " text-" . $metadata['align'] : "";
     $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
@@ -317,7 +317,7 @@ function block_field($metadata)
     $mt = (isset($metadata['mt'])) ? " mt" . $metadata['mt'] : " mt1";
     $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb1";
     $name = (isset($metadata['name'])) ? $metadata['name'] : "";
-    $text = (isset($metadata['text'])) ? $metadata['text'] : "";
+    $text = (isset($metadata['text'])) ? htmlspecialchars($metadata['text']) : "";
     $label = (isset($metadata['label'])) ? $metadata['label'] : "";
     $type = (isset($metadata['type'])) ? $metadata['type'] : "text";
     $hint = (isset($metadata['hint'])) ? '<p class="fmg-ui-hint">' . $metadata['hint'] . '</p>' : "";
@@ -370,7 +370,7 @@ function block_menufield($metadata, $options)
     $mt = (isset($metadata['mt'])) ? " mt" . $metadata['mt'] : " mt1";
     $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb1";
     $name = (isset($metadata['name'])) ? $metadata['name'] : "";
-    $text = (isset($metadata['text'])) ? $metadata['text'] : "";
+    $text = (isset($metadata['text'])) ? htmlspecialchars($metadata['text']) : "";
     $label = (isset($metadata['label'])) ? $metadata['label'] : "";
     $type = (isset($metadata['type'])) ? $metadata['type'] : "text";
     $hint = (isset($metadata['hint'])) ? '<p class="fmg-ui-hint">' . $metadata['hint'] . '</p>' : "";
@@ -489,7 +489,7 @@ function block_textarea($metadata)
     $mt = (isset($metadata['mt'])) ? " mt" . $metadata['mt'] : " mt2";
     $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb2";
     $name = (isset($metadata['name'])) ? $metadata['name'] : "";
-    $text = (isset($metadata['text'])) ? $metadata['text'] : "";
+    $text = (isset($metadata['text'])) ? htmlspecialchars($metadata['text']) : "";
     $label = (isset($metadata['label'])) ? $metadata['label'] : "";
     $hint = (isset($metadata['hint'])) ? '<p class="fmg-ui-hint">' . $metadata['hint'] . '</p>' : "";
     $align = (isset($metadata['align'])) ? " " . $metadata['align'] : "";
@@ -521,6 +521,7 @@ function block_textarea($metadata)
  * [
  * 'label' => '', 
  * 'name' => '', 
+ * 'value' => '', 
  * 'hint' => '', 
  * 'disabled' => false,
  * 'checked' => false,
@@ -537,6 +538,7 @@ function block_radio($metadata)
     $mt = (isset($metadata['mt'])) ? " mt" . $metadata['mt'] : " mt1";
     $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb1";
     $name = (isset($metadata['name'])) ? $metadata['name'] : "";
+    $value = (isset($metadata['value'])) ? $metadata['value'] : "";
     $label = (isset($metadata['label'])) ? $metadata['label'] : "";
     $hint = (isset($metadata['hint'])) ? '<p class="fmg-ui-hint">' . $metadata['hint'] . '</p>' : "";
 
@@ -555,7 +557,7 @@ function block_radio($metadata)
 
     echo '<div class="fmg-ui-block' . $mt . $mb . '">';
     echo '<label class="fmg-ui-radio-container">';
-    echo '<input type="radio" name="' . $name . '" ' . $checked_tag . ' class="fmg-ui-radio' .  $disabled_tag . '" ' . $custom_style . $disabled_tag . ' />';
+    echo '<input type="radio" name="' . $name . '" value="' . $value . '" ' . $checked_tag . ' class="fmg-ui-radio' .  $disabled_tag . '" ' . $custom_style . $disabled_tag . ' />';
     echo '<span class="fmg-ui-radiomark"></span>';
     echo $label;
     echo '</label>';
@@ -632,7 +634,7 @@ function block_buttonbasic($metadata)
 {
     $mt = (isset($metadata['mt'])) ? " mt" . $metadata['mt'] : " mt1";
     $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb1";
-    $text = (isset($metadata['text'])) ? $metadata['text'] : "";
+    $text = (isset($metadata['text'])) ? htmlspecialchars($metadata['text']) : "";
     $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
 
     $type = (isset($metadata['type'])) ? $metadata['type'] : "submit";
@@ -706,7 +708,7 @@ function block_form_close()
 function block_hidden_field($metadata)
 {
 
-    $value = (isset($metadata['value'])) ? ' value="' . $metadata['value'] . '"' : "";
+    $value = (isset($metadata['value'])) ? ' value="' . htmlspecialchars($metadata['value']) . '"' : "";
     $name = (isset($metadata['name'])) ? ' name="' . $metadata['name'] . '"' : "";
 
     echo '<input type="hidden"' . $name . $value . '>';

@@ -241,12 +241,12 @@ function gui_showDatabaseList($template_ID, $project_id, $server, $username, $pa
     include_once getPath_layouts("comp_databaselist");
 }
 
-function project_getKeyAPI($template_ID, $project_id, $projectData_server, $projectData_username, $projectData_password, $projectData_database)
+function project_getKeyAPI($projectData_server, $projectData_username, $projectData_password, $projectData_database)
 {
-    if (isset($_SESSION['api' . $project_id]) && !empty($_SESSION['api' . $project_id])) {
+    if (isset($_SESSION['fmauth']) && !empty($_SESSION['fmauth'])) {
         $authUrl = "https://" . $projectData_server . "/fmi/data/vLatest/validateSession";
         $authHeaders = [
-            "Authorization: Bearer " . $_SESSION['api' . $project_id],
+            "Authorization: Bearer " . $_SESSION['fmauth'],
             "Content-Type: application/json"
         ];
 
@@ -291,7 +291,7 @@ function project_getKeyAPI($template_ID, $project_id, $projectData_server, $proj
 
     if (isset($authData['response']['token'])) {
         $token = $authData['response']['token'];
-        $_SESSION['api' . $project_id] = $token;
+        $_SESSION['fmauth'] = $token;
     } else {
         errorOut("This project is not available. [00103]");
     }
@@ -353,7 +353,7 @@ function gui_showLayoutList($template_ID, $project_id, $server, $database)
 {
     $authUrl = "https://" . $server . "/fmi/data/vLatest/databases/" . $database . "/layouts";
     $authHeaders = [
-        "Authorization: Bearer " . $_SESSION['api' . $project_id],
+        "Authorization: Bearer " . $_SESSION['fmauth'],
         "Content-Type: application/json"
     ];
 
@@ -553,12 +553,6 @@ function gui_projectShowRadioGroup(&$settings, $tag_name, $groupLabel, $labels, 
     echo "<div class='fmg_formentry_radiogroup'><label class='fmg_formentry_label'>{$groupLabel}</label>{$radios}</div>";
 }
 
-function gui_projectShowRemark($label) {
-
-    echo "<div class='fmg_formentry_remark'>{$label}</div>";
-
-}
-
 function gui_projectShowFieldsList(&$settings, $tag_name, $label, $layout, $path = "", $tag_required = false, $refreshList = false, $project_id = "", $server = "", $database = "") {
     // get the layout name and sanatize it*
     // lookup in the project settings array to see if you can locate the fields list
@@ -574,7 +568,7 @@ function gui_projectShowFieldsList(&$settings, $tag_name, $label, $layout, $path
         $fieldsList = [];
         $authUrl = "https://" . $server . "/fmi/data/vLatest/databases/" . $database . "/layouts/" . $layout;
         $authHeaders = [
-            "Authorization: Bearer " . $_SESSION['api' . $project_id],
+            "Authorization: Bearer " . $_SESSION['fmauth'],
             "Content-Type: application/json"
         ];
     
@@ -626,7 +620,7 @@ function gui_projectShowScriptsList(&$settings, $tag_name, $label, $path = "", $
         $scriptsList = [];
         $authUrl = "https://" . $server . "/fmi/data/vLatest/databases/" . $database . "/scripts";
         $authHeaders = [
-            "Authorization: Bearer " . $_SESSION['api' . $project_id],
+            "Authorization: Bearer " . $_SESSION['fmauth'],
             "Content-Type: application/json"
         ];
     

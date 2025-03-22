@@ -146,6 +146,7 @@ a.fmg-button:hover {
     line-height: 20px;
     margin: 0px;
     padding: 0px;
+    width: 100%;
 }
 
 .language-list>li>a {
