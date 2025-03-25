@@ -1,6 +1,6 @@
 <?php
 /**
- * Used to set up all core blocks used inside FMGet.
+ * Used to load all core blocks used inside FMGet.
  * 
  * Holds all the functions needed to generate HTML blocks dynamically
  * The HTML is generated server-side
@@ -304,8 +304,10 @@ function block_row_close()
  * 'type' => 'text', 
  * 'disabled' => false,
  * 'align' => 'left', 
+ * 'nospellcheck' => false,
  * 'mt' => '1', 
  * 'mb' => '1', 
+ * 'attributes' => '',
  * 'style' => ''
  * ]
  * 
@@ -324,16 +326,22 @@ function block_field($metadata)
     $align = (isset($metadata['align'])) ? " " . $metadata['align'] : "";
 
     $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
+    $custom_attributes = (isset($metadata['attributes'])) ? ' ' . $metadata['attributes'] : "";
 
     if (isset($metadata['disabled']) && $metadata['disabled'] == true) {
         $disabled_tag = ' disabled';
     } else {
         $disabled_tag = '';
     }
+    if (isset($metadata['nospellcheck']) && $metadata['nospellcheck'] == true) {
+        $spellcheck_tag = ' spellcheck="false"';
+    } else {
+        $spellcheck_tag = '';
+    }
 
     echo '<div class="fmg-ui-block' . $mt . $mb . '">';
     echo '<div class="fmg-ui-field-container">';
-    echo '<input type="' . $type . '" name="' . $name . '" value="' . $text . '" class="fmg-ui-field' . $align . $disabled_tag . '" id="input-' . $name . '" placeholder=" "' . $custom_style . $disabled_tag . ' />';
+    echo '<input type="' . $type . '" name="' . $name . '" value="' . $text . '" class="fmg-ui-field' . $align . $disabled_tag . '" id="input-' . $name . '" placeholder=" "' . $custom_style . $spellcheck_tag . $custom_attributes . $disabled_tag . ' />';
     echo '<label for="input-' . $name . '" class="fmg-ui-field-label">' . $label . '</label>';
     echo '</div>';
     echo $hint;
@@ -636,18 +644,18 @@ function block_buttonbasic($metadata)
     $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb1";
     $text = (isset($metadata['text'])) ? htmlspecialchars($metadata['text']) : "";
     $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
-
+    $custom_id = (isset($metadata['id'])) ? ' id="' . $metadata['id'] . '"' : "";
     $type = (isset($metadata['type'])) ? $metadata['type'] : "submit";
     $target = (isset($metadata['target'])) ? $metadata['target'] : "";
 
     echo '<div class="fmg-ui-block' . $mt . $mb . '">';
 
     if ($type == "js") {
-        echo '<button type="button" onclick="' . $target . '" class="fmg-ui-button-basic"' . $custom_style . '>';
+        echo '<button type="button" onclick="' . $target . '" class="fmg-ui-button-basic"' . $custom_style . $custom_id . '>';
     } elseif ($type == "link") {
-        echo '<button type="button" onclick="fmg_goToLink(\'' . $target . '\')" class="fmg-ui-button-basic"' . $custom_style . '>';
+        echo '<button type="button" onclick="fmg_goToLink(\'' . $target . '\')" class="fmg-ui-button-basic"' . $custom_style . $custom_id . '>';
     } else {
-        echo '<button type="submit" class="fmg-ui-button-basic"' . $custom_style . '>';
+        echo '<button type="submit" class="fmg-ui-button-basic"' . $custom_style . $custom_id . '>';
     }
     
     echo $text;

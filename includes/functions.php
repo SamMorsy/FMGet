@@ -35,7 +35,7 @@ function fmg_check_server() {
 
 	$php_version = PHP_VERSION;
 
-	if ( version_compare( $required_php_version, $php_version, '>' ) ) {
+	if ( version_compare( $required_php_version, $php_version, '>=' ) ) {
 
         fmg_die('<p>Your server is running PHP version ' . $php_version . ' but FMGet ' . $fmg_version . ' requires at least ' . $required_php_version .'.</p>');
 

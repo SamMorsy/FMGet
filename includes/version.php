@@ -28,4 +28,4 @@ $fmg_fms_version = '18.0';
  *
  * @global string $required_php_version
  */
-$required_php_version = '7.2.24';
+$required_php_version = '7.4';

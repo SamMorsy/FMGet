@@ -12,23 +12,67 @@
  * @package FMGet
  */
 
- session_start();
+
+/*
+ * Start / resume the session
+ * 
+ * We don't use the option cookie_lifetime because we wont include remember me feature with this version.
+ * If it's an old version fmg_check_server(); will exit.
+ * 
+ */
+if (PHP_VERSION_ID > 70300) {
+    session_start([
+        'use_strict_mode' => true,      // Enforce strict mode to prevent session fixation
+        'use_cookies' => true,          // Ensure sessions use cookies
+        'use_only_cookies' => true,     // Disable session ID passing via URL
+        'cookie_httponly' => true,      // Prevent JavaScript access to session cookie
+        'cookie_secure' => true,        // Use secure cookies only over HTTPS
+        'cookie_samesite' => 'Strict',  // Prevent CSRF attacks by restricting cross-site cookies
+        'gc_maxlifetime' => 86400,      // Set garbage collection max lifetime
+        'sid_length' => 96,             // Increase session ID entropy
+        'sid_bits_per_character' => 6,  // Improve session ID complexity
+    ]);
+}
+
+
 
 /** Define FMGROOT as this file's directory */
 if (!defined('FMGROOT')) {
     define('FMGROOT', __DIR__ . '/');
 }
 
+
+
+
 /*
  * The error_reporting() function can be disabled in php.ini
  * Initialize error reporting to a known set of levels, it is wrapped in a function_exists() check.
+ * 
+ * This one has 2 option, for production error_reporting(0); is recommended 
  */
 if (function_exists('error_reporting')) {
+    //error_reporting(0);
     error_reporting(E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_ERROR | E_WARNING | E_PARSE | E_USER_ERROR | E_USER_WARNING | E_RECOVERABLE_ERROR);
 }
 
-// Define the include folder.
+
+
+// Define the include / admin folders.
 define('FMGINC', 'includes');
+define('FMGADM', 'admin');
+
+
+
+// A config file doesn't exist.
+require_once FMGROOT . FMGINC . '/version.php';
+require_once FMGROOT . FMGINC . '/functions.php';
+
+
+
+// Check for the required PHP version.
+fmg_check_server();
+
+
 
 
 /**
@@ -36,6 +80,9 @@ define('FMGINC', 'includes');
  * @global string $fmg_translations loaded language package.
  */
 $fmg_translations = [];
+
+
+
 
 /*
  * If fmg-config.php exists in the FMGet root, load fmg-config.php.
@@ -46,32 +93,14 @@ if (file_exists(FMGROOT . 'fmg-config.php')) {
     /** The config file exists */
     require_once FMGROOT . 'fmg-config.php';
 
-    require_once FMGROOT . FMGINC . '/version.php';
-    require_once FMGROOT . FMGINC . '/functions.php';
-
-    // Check for the required PHP version.
-    fmg_check_server();
-
-    // Register the shutdown handler for fatal errors as soon as possible.
-    //fmg_register_fatal_error_handler();
-
-    // FMG calculates offsets from UTC.
-    date_default_timezone_set('UTC');
+    // Update the time zone.
+    date_default_timezone_set(FMG_TIMEZONE);
 
     // Load language files.
-    //fmg_load_lang();
+    require_once FMGROOT . FMGINC . '/languages/translations.php';
+    fmg_load_language(FMG_LANG, 'admin');
 
 } else {
-
-    // A config file doesn't exist.
-    require_once FMGROOT . FMGINC . '/version.php';
-    require_once FMGROOT . FMGINC . '/functions.php';
-
-    define('FMGADM', 'admin');
-    // Check for the required PHP version.
-    fmg_check_server();
-
-    define('FMG_CONTENT_DIR', FMGROOT . 'fmg-content');
 
     $path = fmg_guess_url() . '/admin/setup-config.php';
 

@@ -15,29 +15,29 @@
 function config_update($updates)
 {
     $configFile = FMGROOT . 'fmg-config.php';
-    
+
     if (!file_exists($configFile)) {
         return false;
     }
-    
+
     $configLines = file($configFile, FILE_IGNORE_NEW_LINES);
     $updatedLines = [];
-    
+
     foreach ($configLines as $line) {
-        
+
         foreach ($updates as $update) {
             $constantName = $update['name'];
             $newValue = var_export($update['value'], true); // Ensures proper escaping
-            
+
             if (strpos($line, "define( '$constantName'") === 0) {
                 $line = "define( '$constantName', $newValue );";
                 break;
             }
         }
-        
+
         $updatedLines[] = $line;
     }
-    
+
     return file_put_contents($configFile, implode("\n", $updatedLines) . "\n") !== false;
 }
 
@@ -77,10 +77,14 @@ function generate_random($length = 20)
  */
 function page_admin_start($title = "", $sidebar = true, $mainbar = true, $setup_css = false)
 {
-
+    if (defined('FMGLANG') && '' !== FMGLANG) {
+        $language_code = FMGLANG;
+    } else {
+        $language_code = 'en-us';
+    }
     ?>
     <!DOCTYPE html>
-    <html lang="en">
+    <html lang="<?php echo $language_code;?>">
 
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -100,20 +104,11 @@ function page_admin_start($title = "", $sidebar = true, $mainbar = true, $setup_
         <?php if ($mainbar) { ?>
             <div class="fmg-ui-header">
                 <div class="fmg-ui-header-group">
-                    <?php if ($sidebar) { ?>
-                        <span class="fmg-ui-menu-btn" onclick="toggleSidebar()">&#9776;</span>
-                    <?php } ?>
                     <strong><?php echo $title; ?></strong>
                 </div>
                 <div class="fmg-ui-header-group">Powered by <a class="fmg-ui-link" target="_blank"
                         href="https://fmget.com">FMGet</a></div>
             </div>
-        <?php } ?>
-        <?php if ($sidebar) { ?>
-            <div class="fmg-ui-sidebar" id="sidebar">
-                <p>Sidebar content</p>
-            </div>
-            <div class="fmg-ui-overlay" id="overlay" onclick="toggleSidebar()"></div>
         <?php } ?>
 
         <div class="fmg-ui-container">
@@ -138,6 +133,7 @@ function page_admin_end($setup_js = false)
             <script src="admin/js/setup.js"></script>
         <?php } ?>
         <script src="includes/js/blocks.js"></script>
+        <script src="admin/js/admin.js"></script>
     </body>
 
     </html>
@@ -251,7 +247,7 @@ function fms_refresh_auth_key($server, $database, $username, $password)
 
         // Validate response structure
         if ($responseFlag === "OK") {
-            return "ok"; 
+            return "ok";
         }
     }
 
@@ -299,4 +295,126 @@ function fms_refresh_auth_key($server, $database, $username, $password)
     $_SESSION['fmauth'] = $authData['response']['token'];
     return "ok";
 
+}
+
+/**
+ * Check if the current user has the right to access the admin area
+ * 
+ * If the PHP version is older than 7 then it wont start the session
+ * and the loader will die on error later on.
+ * 
+ * It uses a compination of session variables, cookies and usid in the url
+ * there are plans to improve it while keeping it simple on the next version.
+ * 
+ * @return void
+ */
+function admin_auth_check()
+{
+    $login_path = fmg_guess_url() . '/admin/login.php';
+    if (PHP_VERSION_ID > 70300) {
+        // Check if the user is an admin
+        if (!isset($_SESSION['fmgadmin']) || !$_SESSION['fmgadmin']) {
+            header('Location: ' . $login_path);
+            exit;
+        }
+
+        // Check FMG_AUTH_KEY1 against session variable
+        if (!defined('FMG_AUTH_KEY1') || FMG_AUTH_KEY1 !== $_SESSION['fmgssk'] ?? null) {
+            header('Location: ' . $login_path);
+            exit;
+        }
+
+        // Check if the user's IP matches the stored session IP
+        if ($_SERVER['REMOTE_ADDR'] !== ($_SESSION['fmguip'] ?? null)) {
+            header('Location: ' . $login_path);
+            exit;
+        }
+
+        // Check FMG_AUTH_KEY2 against cookie variable
+        if (!defined('FMG_AUTH_KEY2') || FMG_AUTH_KEY2 !== ($_COOKIE['fmgpsk'] ?? null)) {
+            header('Location: ' . $login_path);
+            exit;
+        }
+    }
+}
+
+/**
+ * Grants the current user the right to access the admin area
+ * 
+ * This function includes validating the user's raw input
+ * 
+ * @param string $username  FMGet admin account name.
+ * @param string $password  FMGet admin account password.
+ * @return boolean          Returns true if the admins right were granted to the user .
+ */
+function admin_auth_grant($username = "", $password = "")
+{
+    // Validate user input
+    if (empty($username) || empty($password)) {
+        return false;
+    }
+
+    // Validate username
+    if (!defined('FMG_USER') || FMG_USER !== $username) {
+        return false;
+    }
+
+    // Validate password
+    if (!defined('FMG_PASSWORD') || !defined('FMG_AUTH_SALT')) {
+        return false;
+    }
+    $saltedPassword = FMG_AUTH_SALT . $password;
+    if (!password_verify($saltedPassword, FMG_PASSWORD)) {
+        return false;
+    }
+    // We are ready to grant the access to the admin dashboard.
+    // Send cookie variables
+    $cookie_name = "fmgpsk";
+    $cookie_value = FMG_AUTH_KEY2;
+    setcookie($cookie_name, $cookie_value, [
+        'expires' => time() + (86400 * 30),
+        'path' => '/',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Strict'
+    ]);
+    
+
+    // Declare the session variables
+    $_SESSION['fmgssk'] = FMG_AUTH_KEY1;
+    $_SESSION['fmguip'] = $_SERVER['REMOTE_ADDR'];
+    $_SESSION['fmgadmin'] = true;
+
+    return true;
+}
+
+/**
+ * Admin authentication guard.
+ * 
+ * Save guard the system against direct CSRF or brute force attacks
+ * 
+ * This function checks whether the current server time is within the allowed session window.
+ * It also verifies that specific session values are set, not empty, and match each other.
+ * 
+ * @return boolean      Returns true if no condition failed.
+ */
+function admin_auth_guard()
+{
+    // Get the current server time
+    $currentTime = time();
+
+    // Validate session time constraints
+    if (
+        !isset($_SESSION['fmgatws'], $_SESSION['fmgatwe']) ||
+        $currentTime <= $_SESSION['fmgatws'] || $currentTime > $_SESSION['fmgatwe']
+    ) {
+        return false;
+    }
+
+    // Validate CSRF token
+    if (!isset($_SESSION['fmgcsrf'], $_POST['fmg_csrf']) || empty($_SESSION['fmgcsrf']) || empty($_POST['fmg_csrf']) || $_SESSION['fmgcsrf'] !== $_POST['fmg_csrf']) {
+        return false;
+    }
+
+    return true;
 }

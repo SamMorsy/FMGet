@@ -88,4 +88,13 @@ return [
 
     "setup_alert_username_colon" => "The database username can't contain a colon ( : ) because it causes a conflict with the data API authentication.",
     "setup_error_fmusername_colon" => "The database username must not include a colon.",
+
+    "login_username_label"=> "Username",
+    "login_password_label"=> "Password",
+    "login_button_label" => "Log In",
+    "login_error1" => "Username and password can't be empty.",
+    "login_error2" => "Invalid username or password.",
+    "login_error3" => "Session timed out, Please try again.",
+    'login_title' => 'Sign in to continue',
+    "admin_area" => "Admin Area",
 ];

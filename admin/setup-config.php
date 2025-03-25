@@ -18,7 +18,7 @@ if (!defined('FMGROOT')) {
 }
 
 require FMGROOT . 'fmg-load.php';
-require_once FMGROOT . 'admin/functions.php';
+require_once FMGROOT . FMGADM . '/functions.php';
 require_once FMGROOT . FMGINC . '/blocks.php';
 
 // Find fmg-config-sample.php
@@ -324,7 +324,7 @@ switch ($step) {
         }
         if (!isset($postData['fm_username']) || empty($fm_username)) {
             $form_errors .= txt("setup_error_fmusername_required") . "<br>";
-        } elseif (str_contains($fm_username,":")) {
+        } elseif (str_contains($fm_username, ":")) {
             $form_errors .= txt("setup_error_fmusername_colon") . "<br>";
         }
         if (!isset($postData['fm_password']) || empty($fm_password)) {
@@ -554,7 +554,7 @@ switch ($step) {
 
 
         if (empty($form_errors)) {
-            
+
             $fmserver_check = fms_refresh_auth_key($postData['fm_server'], $fm_database, $postData['fm_username'], $postData['fm_password']);
 
             if ($fmserver_check == "error1") {
@@ -565,7 +565,7 @@ switch ($step) {
             }
         }
 
-        
+
         if (empty($form_errors)) {
             // Create the auth keys
             $authKey1 = generate_random(40);
@@ -635,7 +635,7 @@ switch ($step) {
                 'text' => $form_errors,
                 'size' => 2,
             ]);
-            
+
             block_buttonbasic([
                 'text' => txt('try_again'),
                 'type' => 'js',
