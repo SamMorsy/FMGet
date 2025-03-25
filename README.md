@@ -1,19 +1,18 @@
 # FMGet
 ![banner](https://github.com/user-attachments/assets/7e06255e-dfc2-40ba-92c2-5fb754b285c3)
 
-FMGet is a free and open-source PHP framework specifically designed for FileMaker users. It enables you to effortlessly create, control, and monitor web forms and applications directly from within FileMaker—no coding or technical knowledge required.
+FMGet is a free and open-source PHP framework specifically designed for FileMaker users. It enables you to effortlessly create, control, and monitor web forms and pages for  FileMaker databases — no coding or technical knowledge required.
 
 It uses the FileMaker data API to manage and trasnfer data, With a simple setup process that takes just a few minutes, you can manage everything without relying on external services.
 
-Latest Version: 1.0.2 [Not released yet]
+Latest Version: 1.0.3 [Not released yet]
 
 ## Requirements
-You can install FMGet on the majority of hosted websites or web ser
-vers.
+You can install FMGet on the majority of hosted websites or web servers.
 
 - Website with SSL enabled and PHP version 7.3 or greater
 - FileMaker server version 18 or newer (SSL and data API must be enabled)
-- [Full Access] database account (Access to the FileMaker data API must be enabled)
+- [Full Access] database account and must have the fmrest extended privileges set enabled
 
 ## Features
 - Lightweight, simple and fast.

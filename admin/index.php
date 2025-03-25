@@ -41,7 +41,7 @@ block_column_close();
 
 
 block_column_open([
-    'size' => 8,
+    'size' => 9,
 ]);
 block_note([
     'text' => "Welcome to FMGet!",

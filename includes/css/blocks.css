@@ -338,7 +338,7 @@ body {
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 948px) {
     .fmg-ui-column {
         flex: 0 0 100% !important;
         max-width: 100% !important;
