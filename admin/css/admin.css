@@ -22,46 +22,8 @@
     gap: 5px;
 }
 
-.fmg-ui-menu-btn {
-    font-size: 20px;
-    cursor: pointer;
-    margin: 0px 10px;
-}
-
 .fmg-ui-container {
     padding: 50px 10px 10px 10px;
-}
-
-.fmg-ui-sidebar {
-    position: fixed;
-    top: 0;
-    left: -300px;
-    width: 300px;
-    height: 100vh;
-    background: white;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-    transition: left 0.3s ease-in-out;
-    z-index: 1100;
-    padding: 20px;
-}
-
-.fmg-ui-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    z-index: 1000;
-}
-
-.fmg-ui-sidebar.open {
-    left: 0;
-}
-
-.fmg-ui-overlay.show {
-    display: block;
 }
 
 .fmg-ui-link {

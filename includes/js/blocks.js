@@ -1,3 +1,10 @@
+/**
+ * Show a temporary message on the right side of the page.
+ *
+ * @param {string} message - The message text.
+ * @param {string} message_type - The message styling type.
+ * @returns {void}
+ */
 function fmg_showMessage(message, message_type) {
     let message_box = document.createElement("div");
     message_box.classList.add("fmg-ui-message");
@@ -19,6 +26,12 @@ function fmg_showMessage(message, message_type) {
     });
 }
 
+/**
+ * Filter the dropdown menu.
+ *
+ * @param {Element} inputElement - The options list DOM element.
+ * @returns {void}
+ */
 function fmg_dropdownfilterOptions(inputElement) {
     const dropdownContainer = inputElement.closest('.fmg-ui-field-container.menu');
     const dropdownMenu = dropdownContainer.querySelector('.fmg-ui-field-options');
@@ -34,6 +47,12 @@ function fmg_dropdownfilterOptions(inputElement) {
     });
 }
 
+/**
+ * Shows the dropdown menu for a field.
+ *
+ * @param {Element} inputElement - The options list DOM element.
+ * @returns {void}
+ */
 function fmg_dropdownshow(inputElement) {
     const parentBlock = inputElement.closest('.fmg-ui-block');
     const dropdownContainer = inputElement.closest('.fmg-ui-field-container.menu');
@@ -57,6 +76,14 @@ function fmg_dropdownshow(inputElement) {
     }, 0);
 }
 
+
+/**
+ * Hides the dropdown menu for a field.
+ *
+ * @param {Element} inputElement - The options list DOM element.
+ * @param {event} event - The event object.
+ * @returns {void}
+ */
 function fmg_dropdownhide(inputElement, event) {
     const dropdownContainer = inputElement.closest('.fmg-ui-field-container.menu');
     const dropdownMenu = dropdownContainer.querySelector('.fmg-ui-field-options');
@@ -75,7 +102,12 @@ function fmg_dropdownhide(inputElement, event) {
     console.log("Canceloo");
 }
 
-
+/**
+ * Stores the selected option from the dropdown menu in the input field.
+ *
+ * @param {event} event - The event object.
+ * @returns {void}
+ */
 function fmg_dropdownselectOption(event) {
     const dropdownContainer = event.currentTarget.closest('.fmg-ui-field-container.menu');
     const inputElement = dropdownContainer.querySelector('input');
@@ -88,6 +120,14 @@ function fmg_dropdownselectOption(event) {
     }
 }
 
+/**
+ * Shows / hides a group of blocks of items on the page.
+ *
+ * @param {Element} button - The button DOM element.
+ * @param {string} show_text - The text to show when the group are hidden.
+ * @param {string} hide_text - The text to show when the group are displayed.
+ * @returns {void}
+ */
 function fmg_toggleGroup(button, show_text, hide_text) {
     let details = button.nextElementSibling;
     let toggleText = button.querySelector(".fmg-ui-group-toggle-text");
@@ -95,15 +135,21 @@ function fmg_toggleGroup(button, show_text, hide_text) {
 
     if (details.style.maxHeight) {
         details.style.maxHeight = null;
-        toggleText.textContent = "Show details";
+        toggleText.textContent = show_text;
         toggleArrow.innerHTML = "&#129095;";
     } else {
         details.style.maxHeight = details.scrollHeight + "px";
-        toggleText.textContent = "Show less";
+        toggleText.textContent = hide_text;
         toggleArrow.innerHTML = "&#129093;";
     }
 }
 
+/**
+ * redirect to a given link.
+ *
+ * @param {string} target_link - The full link to be redirected to.
+ * @returns {void}
+ */
 function fmg_goToLink(target_link) {
     window.location.href = target_link;
 }

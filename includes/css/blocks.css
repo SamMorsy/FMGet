@@ -98,15 +98,15 @@ body {
     font-size: 20px;
 }
 
-.fmg-ui-title.left {
+.left {
     text-align: left;
 }
 
-.fmg-ui-title.right {
+.right {
     text-align: right;
 }
 
-.fmg-ui-title.center {
+.center {
     text-align: center;
 }
 
@@ -127,18 +127,6 @@ body {
 
 .fmg-ui-text.size3 {
     font-size: 13px;
-}
-
-.fmg-ui-text.left {
-    text-align: left;
-}
-
-.fmg-ui-text.right {
-    text-align: right;
-}
-
-.fmg-ui-text.center {
-    text-align: center;
 }
 
 /* link block */
@@ -219,17 +207,6 @@ body {
     border-color: #ffecb5;
 }
 
-.fmg-ui-note.left {
-    text-align: left;
-}
-
-.fmg-ui-note.right {
-    text-align: right;
-}
-
-.fmg-ui-note.center {
-    text-align: center;
-}
 
 /* row container */
 .fmg-ui-row {
@@ -325,17 +302,6 @@ body {
     max-width: 100%;
 }
 
-.fmg-ui-column.left {
-    text-align: left;
-}
-
-.fmg-ui-column.right {
-    text-align: right;
-}
-
-.fmg-ui-column.center {
-    text-align: center;
-}
 
 /* Responsive adjustments */
 @media (max-width: 948px) {
@@ -404,17 +370,6 @@ body {
     border: 1px solid rgb(195 195 195);
 }
 
-.fmg-ui-field.left {
-    text-align: left;
-}
-
-.fmg-ui-field.right {
-    text-align: right;
-}
-
-.fmg-ui-field.center {
-    text-align: center;
-}
 
 .fmg-ui-field-container.menu {
     border: 1px solid #ccd0d4;
@@ -562,18 +517,6 @@ body {
 
 .fmg-ui-textarea.disabled {
     border: 1px solid rgb(195 195 195);
-}
-
-.fmg-ui-textarea.left {
-    text-align: left;
-}
-
-.fmg-ui-textarea.right {
-    text-align: right;
-}
-
-.fmg-ui-textarea.center {
-    text-align: center;
 }
 
 
