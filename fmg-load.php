@@ -62,8 +62,6 @@ define('FMGINC', 'includes');
 define('FMGADM', 'admin');
 
 
-
-// A config file doesn't exist.
 require_once FMGROOT . FMGINC . '/version.php';
 require_once FMGROOT . FMGINC . '/functions.php';
 
@@ -98,10 +96,10 @@ if (file_exists(FMGROOT . 'fmg-config.php')) {
 
     // Load language files.
     require_once FMGROOT . FMGINC . '/languages/translations.php';
-    fmg_load_language(FMG_LANG, 'admin');
 
 } else {
-
+    
+    // A config file doesn't exist.
     $path = fmg_guess_url() . '/admin/setup-config.php';
 
     // Redirect to setup-config.php.

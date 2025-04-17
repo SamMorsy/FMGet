@@ -78,7 +78,7 @@ switch ($step) {
     case 0:
         // Check if language is selected and is available then load the language admin file
         $language_code = isset($_GET['lang']) ? $_GET['lang'] : '';
-        fmg_load_language($language_code, 'admin');
+        fmg_load_language($language_code, 'setup');
 
         page_admin_start('Setup', false, true, true);
         block_row_open([
@@ -89,7 +89,7 @@ switch ($step) {
         ]);
         // 1-welcome message
         block_title([
-            'text' => txt('setup_welcome'),
+            'text' => txt('welcome'),
             'size' => 3,
         ]);
         block_separator([
@@ -97,23 +97,23 @@ switch ($step) {
             'mb' => 3,
         ]);
         block_text([
-            'text' => txt('setup_req_ssl'),
+            'text' => txt('req_ssl'),
             'size' => 2,
         ]);
         block_text([
-            'text' => txt('setup_req_php'),
+            'text' => txt('req_php'),
             'size' => 2,
         ]);
         block_text([
-            'text' => txt('setup_req_fms'),
+            'text' => txt('req_fms'),
             'size' => 2,
         ]);
         block_text([
-            'text' => txt('setup_req_api'),
+            'text' => txt('req_api'),
             'size' => 2,
         ]);
         block_text([
-            'text' => txt('setup_req_acc'),
+            'text' => txt('req_acc'),
             'size' => 2,
         ]);
         block_separator([
@@ -121,11 +121,11 @@ switch ($step) {
             'mb' => 4,
         ]);
         block_text([
-            'text' => txt('setup_intro1'),
+            'text' => txt('intro1'),
             'size' => 3,
         ]);
         block_link([
-            'text' => txt('setup_intro2'),
+            'text' => txt('intro2'),
             'external' => true,
             'url' => 'https://fmget.com/getting-started.html'
         ]);
@@ -135,13 +135,13 @@ switch ($step) {
         ]);
 
         block_buttonbasic([
-            'text' => txt('setup_button_install'),
+            'text' => txt('button_install'),
             'type' => 'link',
             'target' => 'admin/setup-config.php?step=1&lang=' . $language_code,
             'mb' => 3
         ]);
         block_link([
-            'text' => txt('setup_back1'),
+            'text' => txt('back1'),
             'url' => 'admin/setup-config.php'
         ]);
 
@@ -155,16 +155,16 @@ switch ($step) {
     case 1:
         // Check if language is selected and is available then load the language admin file
         $language_code = isset($_GET['lang']) ? $_GET['lang'] : '';
-        fmg_load_language($language_code, 'admin');
+        fmg_load_language($language_code, 'setup');
 
         // Check for SSL on web server
         if (!fmg_is_ssl()) {
-            fmg_die('<p>' . txt('setup_error_ssl') . '</p>' . "<a href=\"setup-config.php?step=0&lang={$language_code}\">" . txt('setup_back2') . "</a>", 'FMGet Setup');
+            fmg_die('<p>' . txt('error_ssl') . '</p>' . "<a href=\"setup-config.php?step=0&lang={$language_code}\">" . txt('back2') . "</a>", 'FMGet Setup');
         }
 
         // Check if cURL is enabled
         if (!function_exists('curl_version')) {
-            fmg_die('<p>' . txt('setup_error_curl1') . '</p>' . "<a href=\"setup-config.php?step=0&lang={$language_code}\">" . txt('setup_back2') . "</a>", 'FMGet Setup');
+            fmg_die('<p>' . txt('error_curl1') . '</p>' . "<a href=\"setup-config.php?step=0&lang={$language_code}\">" . txt('back2') . "</a>", 'FMGet Setup');
         }
 
         // Get list of the available timezones
@@ -179,7 +179,7 @@ switch ($step) {
         ]);
 
         block_title([
-            'text' => txt('setup_config_title'),
+            'text' => txt('config_title'),
             'size' => 3,
         ]);
         block_separator([
@@ -187,21 +187,21 @@ switch ($step) {
             'mb' => 3,
         ]);
         block_text([
-            'text' => txt('setup_config_details1'),
+            'text' => txt('config_details1'),
             'size' => 2,
         ]);
         block_form_open([
             'action' => 'admin/setup-config.php?step=2'
         ]);
         block_field([
-            'label' => txt('setup_config_sitename_label'),
+            'label' => txt('config_sitename_label'),
             'name' => 'fmg_sitename',
             'type' => 'text',
             'mt' => '4',
             'mb' => '3',
         ]);
         block_menufield([
-            'label' => txt('setup_config_timezone_label'),
+            'label' => txt('config_timezone_label'),
             'text' => '',
             'name' => 'fmg_timezone',
             'hint' => txt('example') . ': UTC, America/Sao_Paulo, America/New_York, Europe/Lisbon.',
@@ -209,7 +209,7 @@ switch ($step) {
             'mb' => '3',
         ], $timezones);
         block_menufield([
-            'label' => txt('setup_config_dateformat_label'),
+            'label' => txt('config_dateformat_label'),
             'text' => '',
             'name' => 'fmg_dateformat',
             'hint' => txt('example') . ': MM/DD/YYYY',
@@ -221,39 +221,39 @@ switch ($step) {
             'YYYY/MM/DD'
         ]);
         block_field([
-            'label' => txt('setup_config_fmserver_label'),
+            'label' => txt('config_fmserver_label'),
             'name' => 'fm_server',
-            'hint' => txt('example') . ': fms.example.com<br>' . txt('setup_config_fmserver_hint'),
+            'hint' => txt('example') . ': fms.example.com<br>' . txt('config_fmserver_hint'),
             'type' => 'text',
             'mt' => '4',
             'mb' => '4',
         ]);
 
         block_title([
-            'text' => txt('setup_config_dbaccess'),
+            'text' => txt('config_dbaccess'),
             'size' => 2,
         ]);
         block_field([
-            'label' => txt('setup_config_fmusername_label'),
+            'label' => txt('config_fmusername_label'),
             'name' => 'fm_username',
             'type' => 'text',
             'mt' => '4',
             'mb' => '3',
         ]);
         block_field([
-            'label' => txt('setup_config_fmpassword_label'),
+            'label' => txt('config_fmpassword_label'),
             'name' => 'fm_password',
             'type' => 'text',
             'mt' => '4',
             'mb' => '3',
         ]);
         block_note([
-            'text' => txt('setup_fmcloud_notice'),
+            'text' => txt('fmcloud_notice'),
             'mb' => 3,
             'mt' => 3,
         ]);
         block_note([
-            'text' => txt('setup_alert_username_colon'),
+            'text' => txt('alert_username_colon'),
             'type' => 'warning',
         ]);
         block_hidden_field([
@@ -293,11 +293,11 @@ switch ($step) {
         $language_code = isset($postData['local']) ? $postData['local'] : '';
         $fm_password = isset($postData['fm_password']) ? $postData['fm_password'] : '';
         $fm_username = isset($postData['fm_username']) ? $postData['fm_username'] : '';
-        fmg_load_language($language_code, 'admin');
+        fmg_load_language($language_code, 'setup');
 
         $form_errors = "";
         if (!isset($postData['fmg_sitename']) || empty($postData['fmg_sitename'])) {
-            $form_errors .= txt("setup_error_sitename_required") . "<br>";
+            $form_errors .= txt("error_sitename_required") . "<br>";
         }
         if (isset($postData['fm_server']) && !empty($postData['fm_server'])) {
             // Ensure input is a string and trim any surrounding whitespace
@@ -306,36 +306,36 @@ switch ($step) {
             // Regular expression to match a valid domain name
             $fms_pattern = '/^(?!www\.)(?!http:\/\/)(?!https:\/\/)(?!\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/';
             if (!preg_match($fms_pattern, $fm_server)) {
-                $form_errors .= txt("setup_error_fmserver_error") . "<br>";
+                $form_errors .= txt("error_fmserver_error") . "<br>";
             }
 
         } else {
-            $form_errors .= txt("setup_error_fmserver_required") . "<br>";
+            $form_errors .= txt("error_fmserver_required") . "<br>";
         }
         if (!isset($postData['fmg_timezone']) || empty($postData['fmg_timezone'])) {
-            $form_errors .= txt("setup_error_timezone_required") . "<br>";
+            $form_errors .= txt("error_timezone_required") . "<br>";
         } elseif (!in_array($postData['fmg_timezone'], timezone_identifiers_list())) {
-            $form_errors .= txt("setup_error_timezone_error") . "<br>";
+            $form_errors .= txt("error_timezone_error") . "<br>";
         }
         if (!isset($postData['fmg_dateformat']) || empty($postData['fmg_dateformat'])) {
-            $form_errors .= txt("setup_error_dateformat_required") . "<br>";
+            $form_errors .= txt("error_dateformat_required") . "<br>";
         } elseif (!in_array($postData['fmg_dateformat'], ['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD'])) {
-            $form_errors .= txt("setup_error_dateformat_error") . "<br>";
+            $form_errors .= txt("error_dateformat_error") . "<br>";
         }
         if (!isset($postData['fm_username']) || empty($fm_username)) {
-            $form_errors .= txt("setup_error_fmusername_required") . "<br>";
+            $form_errors .= txt("error_fmusername_required") . "<br>";
         } elseif (str_contains($fm_username, ":")) {
-            $form_errors .= txt("setup_error_fmusername_colon") . "<br>";
+            $form_errors .= txt("error_fmusername_colon") . "<br>";
         }
         if (!isset($postData['fm_password']) || empty($fm_password)) {
-            $form_errors .= txt("setup_error_fmpassword_required") . "<br>";
+            $form_errors .= txt("error_fmpassword_required") . "<br>";
         }
 
         if (empty($form_errors)) {
             $fmserver_check = fms_get_database_list($fm_server, $fm_username, $fm_password);
 
             if ($fmserver_check == "error1") {
-                $form_errors .= txt("setup_error_fmserver_invalid") . "<br>";
+                $form_errors .= txt("error_fmserver_invalid") . "<br>";
             }
 
         }
@@ -351,7 +351,7 @@ switch ($step) {
         if (!empty($form_errors)) {
 
             block_title([
-                'text' => txt('setup_error_title'),
+                'text' => txt('error_title'),
                 'size' => 3,
             ]);
             block_separator([
@@ -372,7 +372,7 @@ switch ($step) {
         } else {
 
             block_title([
-                'text' => txt('setup_config_title2'),
+                'text' => txt('config_title2'),
                 'size' => 3,
             ]);
             block_separator([
@@ -380,7 +380,7 @@ switch ($step) {
                 'mb' => 3,
             ]);
             block_text([
-                'text' => txt('setup_config_details2'),
+                'text' => txt('config_details2'),
                 'size' => 2,
             ]);
 
@@ -396,14 +396,14 @@ switch ($step) {
             ]);
 
             block_title([
-                'text' => txt('setup_config_selectdb'),
+                'text' => txt('config_selectdb'),
                 'size' => 2,
                 'mb' => '4',
             ]);
 
             if ($fmserver_check == "error2") {
                 block_text([
-                    'text' => txt('setup_error_fmserver_nodatabase'),
+                    'text' => txt('error_fmserver_nodatabase'),
                     'size' => 2,
                 ]);
             } else {
@@ -421,13 +421,13 @@ switch ($step) {
                 }
             }
             block_note([
-                'text' => txt('setup_fmserver_otherdatabase'),
+                'text' => txt('fmserver_otherdatabase'),
                 'type' => 'warning',
             ]);
             block_field([
-                'label' => txt('setup_config_named_fmdatabase_label'),
+                'label' => txt('config_named_fmdatabase_label'),
                 'name' => 'fm_named_database',
-                'hint' => txt('setup_config_named_fmdatabase_hint'),
+                'hint' => txt('config_named_fmdatabase_hint'),
                 'type' => 'text',
                 'mt' => '4',
                 'mb' => '3',
@@ -439,25 +439,25 @@ switch ($step) {
             ]);
 
             block_field([
-                'label' => txt('setup_config_username_label'),
+                'label' => txt('config_username_label'),
                 'name' => 'fmg_username',
-                'hint' => txt('setup_config_username_hint'),
+                'hint' => txt('config_username_hint'),
                 'type' => 'text',
                 'mt' => '4',
                 'mb' => '3',
             ]);
             block_field([
-                'label' => txt('setup_config_password_label'),
+                'label' => txt('config_password_label'),
                 'name' => 'fmg_password',
-                'hint' => txt('setup_config_password_hint'),
+                'hint' => txt('config_password_hint'),
                 'type' => 'text',
                 'mt' => '4',
                 'mb' => '3',
             ]);
             block_field([
-                'label' => txt('setup_config_email_label'),
+                'label' => txt('config_email_label'),
                 'name' => 'fmg_email',
-                'hint' => txt('setup_config_email_hint'),
+                'hint' => txt('config_email_hint'),
                 'type' => 'text',
                 'mt' => '4',
                 'mb' => '3',
@@ -528,23 +528,23 @@ switch ($step) {
         }
 
         $language_code = isset($postData['local']) ? $postData['local'] : '';
-        fmg_load_language($language_code, 'admin');
+        fmg_load_language($language_code, 'setup');
 
         $form_errors = "";
         if (!isset($postData['fmg_username']) || empty($postData['fmg_username'])) {
-            $form_errors .= txt("setup_error_fmgusername_required") . "<br>";
+            $form_errors .= txt("error_fmgusername_required") . "<br>";
         }
         if (!isset($postData['fmg_password']) || empty($postData['fmg_password'])) {
-            $form_errors .= txt("setup_error_fmgpassword_required") . "<br>";
+            $form_errors .= txt("error_fmgpassword_required") . "<br>";
         }
         if (!isset($postData['fmg_email']) || empty($postData['fmg_email'])) {
-            $form_errors .= txt("setup_error_email_required") . "<br>";
+            $form_errors .= txt("error_email_required") . "<br>";
         } elseif (!filter_var($postData['fmg_email'], FILTER_VALIDATE_EMAIL)) {
-            $form_errors .= txt("setup_error_email_error") . "<br>";
+            $form_errors .= txt("error_email_error") . "<br>";
         }
         if (!isset($postData['fm_database']) || empty($postData['fm_database'])) {
             if (!isset($postData['fm_named_database']) || empty($postData['fm_named_database'])) {
-                $form_errors .= txt("setup_error_fmdatabase_required") . "<br>";
+                $form_errors .= txt("error_fmdatabase_required") . "<br>";
             } else {
                 $fm_database = $postData['fm_named_database'];
             }
@@ -558,10 +558,10 @@ switch ($step) {
             $fmserver_check = fms_refresh_auth_key($postData['fm_server'], $fm_database, $postData['fm_username'], $postData['fm_password']);
 
             if ($fmserver_check == "error1") {
-                $form_errors .= txt("setup_error_fmserver_invalid") . "<br>";
+                $form_errors .= txt("error_fmserver_invalid") . "<br>";
             }
             if ($fmserver_check == "error2") {
-                $form_errors .= txt("setup_error_database_noaccess") . "<br>";
+                $form_errors .= txt("error_database_noaccess") . "<br>";
             }
         }
 
@@ -581,7 +581,7 @@ switch ($step) {
             // Duplicate the config file and save the setup configurations to the new file named 'fmg-config.php'
             $config_content = implode("", $config_file);
             if (file_put_contents(FMGROOT . 'fmg-config.php', $config_content) === false) {
-                $form_errors .= txt('setup_error_config') . "<br>";
+                $form_errors .= txt('error_config') . "<br>";
             } else {
                 $updates_for_config = [
                     ['name' => 'FMG_DB_NAME', 'value' => $fm_database],
@@ -624,7 +624,7 @@ switch ($step) {
         if (!empty($form_errors)) {
 
             block_title([
-                'text' => txt('setup_error_title'),
+                'text' => txt('error_title'),
                 'size' => 3,
             ]);
             block_separator([
@@ -646,7 +646,7 @@ switch ($step) {
         } else {
 
             block_title([
-                'text' => txt('setup_welcome_title'),
+                'text' => txt('welcome_title'),
                 'size' => 3,
             ]);
             block_separator([
@@ -654,11 +654,11 @@ switch ($step) {
                 'mb' => 3,
             ]);
             block_text([
-                'text' => txt('setup_welcome_details'),
+                'text' => txt('welcome_details'),
                 'size' => 2,
             ]);
             block_buttonbasic([
-                'text' => txt('setup_button_login'),
+                'text' => txt('button_login'),
                 'type' => 'link',
                 'target' => 'admin/index.php',
                 'mt' => 4

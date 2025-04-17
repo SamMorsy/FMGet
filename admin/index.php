@@ -15,6 +15,7 @@ if (!defined('FMGROOT')) {
 require FMGROOT . 'fmg-load.php';
 require_once FMGROOT . FMGADM . '/functions.php';
 require_once FMGROOT . FMGINC . '/blocks.php';
+fmg_load_language(FMG_LANG, 'admin');
 
 /**
  * Auth check

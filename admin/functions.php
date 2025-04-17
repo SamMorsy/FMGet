@@ -303,8 +303,9 @@ function fms_refresh_auth_key($server, $database, $username, $password)
  * If the PHP version is older than 7 then it wont start the session
  * and the loader will die on error later on.
  * 
- * It uses a compination of session variables, cookies and usid in the url
- * there are plans to improve it while keeping it simple on the next version.
+ * It uses a compination of session variables, cookies and usid.
+ * 
+ * There are plans to improve it while keeping it simple on the next version.
  * 
  * @return void
  */
