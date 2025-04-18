@@ -16,15 +16,15 @@ body {
     box-sizing: border-box;
 }
 
-.fmg-ui-block.text-left {
+.text-left {
     text-align: left;
 }
 
-.fmg-ui-block.text-right {
+.text-right {
     text-align: right;
 }
 
-.fmg-ui-block.text-center {
+.text-center {
     text-align: center;
 }
 

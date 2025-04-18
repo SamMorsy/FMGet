@@ -30,3 +30,149 @@
     color: #005d76;
     text-decoration: none;
 }
+
+
+
+
+
+/* Reset default list styles */
+.nav-container ul {
+    list-style: none;
+    margin: 0;
+}
+
+/* Remove default link underline and set color */
+.nav-container a {
+    text-decoration: none;
+    color: inherit;
+    /* Inherit color from parent */
+}
+
+/* Style for the main navigation container */
+.nav-container {
+    font-size: 13px;
+    background-color: #ffffff;
+    /* white */
+    border-radius: 0.5rem;
+    /* Rounded corners */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow */
+    width: 100%;
+    /* Full width of its parent */
+    overflow: hidden;
+    /* Ensure rounded corners apply correctly */
+}
+
+/* Style for main menu items */
+.nav-menu>li>a {
+    display: block;
+    padding: 0.35rem 1.0rem;
+    /* Vertical and horizontal padding */
+    color: #374151;
+    /* Equivalent to text-gray-700 */
+    font-weight: 600;
+    /* Semibold weight - INCREASED for distinction */
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-left-color 0.2s ease-in-out;
+    /* Smooth transition */
+    border-left: 4px solid transparent;
+    /* Indicator space */
+}
+
+/* Hover effect for main menu items */
+.nav-menu>li>a:hover {
+    background-color: #f3f4f6;
+    /* Equivalent to bg-gray-100 */
+    color: #111827;
+    /* Equivalent to text-gray-900 */
+    border-left-color: #6b7280;
+    /* Equivalent to gray-500 */
+}
+
+/* Style for active/current main menu item (example) */
+.nav-menu>li>a.active {
+    background-color: #e5e7eb;
+    /* Equivalent to bg-gray-200 */
+    color: #111827;
+    /* Equivalent to text-gray-900 */
+    border-left-color: #3b82f6;
+    /* Equivalent to blue-500 */
+    font-weight: 700;
+    /* Bold for active main item */
+}
+
+/* Style for sub-menu container */
+.sub-menu {
+    padding-left: 10px;
+    background-color: #f9fafb;
+    /* Equivalent to bg-gray-50 */
+    /* Removed padding-left from container, handled by items now */
+    border-left: 4px solid #e5e7eb;
+    /* Equivalent to border-gray-200 */
+    margin-left: 0.5rem;
+    /* Space from the left edge */
+    margin-right: 0.5rem;
+    /* Space from the right edge */
+    margin-bottom: 0.5rem;
+    /* Space below sub-menu block */
+    border-radius: 0.375rem;
+    /* Slightly rounded corners */
+    /* Sub-menus are hidden by default, shown on hover/focus of parent - requires JS or different approach */
+    /* For simplicity here, they are always visible. Add JS for toggle functionality */
+}
+
+/* Style for sub-menu items */
+.sub-menu li a {
+    display: block;
+    /* INCREASED left padding for more indentation */
+    padding: 0.35rem 1rem 0.35rem 2rem;
+    /* Top, Right, Bottom, Left padding */
+    color: #4b5563;
+    /* Equivalent to text-gray-600 */
+    font-size: 0.875rem;
+    /* Slightly smaller font */
+    font-weight: 400;
+    /* Normal weight - Explicitly set for contrast */
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    border-radius: 0.25rem;
+    /* Rounded corners for hover */
+}
+
+/* Hover effect for sub-menu items */
+.sub-menu li a:hover {
+    background-color: #e5e7eb;
+    /* Equivalent to bg-gray-200 */
+    color: #1f2937;
+    /* Equivalent to text-gray-800 */
+}
+
+/* Style for active/current sub-menu item (example) */
+.sub-menu li a.active {
+    background-color: #d1d5db;
+    /* Equivalent to bg-gray-300 */
+    color: #111827;
+    /* Equivalent to text-gray-900 */
+    font-weight: 500;
+    /* Medium weight for active sub-item */
+}
+
+/* Style for the last item (Log out) */
+.nav-menu>li:last-child>a {
+    color: #ef4444;
+    /* Equivalent to text-red-500 */
+    border-top: 1px solid #e5e7eb;
+    /* Separator line (gray-200) */
+    margin-top: 0.5rem;
+    /* Space above */
+    font-weight: 600;
+    /* Match main item weight */
+}
+
+/* Hover effect for Log out */
+.nav-menu>li:last-child>a:hover {
+    background-color: #fee2e2;
+    /* Equivalent to bg-red-100 */
+    color: #b91c1c;
+    /* Equivalent to text-red-700 */
+    border-left-color: #ef4444;
+    /* Equivalent to red-500 */
+}

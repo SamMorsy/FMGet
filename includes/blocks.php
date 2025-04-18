@@ -31,7 +31,7 @@ function block_title($metadata)
     $title_text = (isset($metadata['text'])) ? $metadata['text'] : "";
     $h_level = (isset($metadata['level'])) ? $metadata['level'] : 2;
     $font_size = (isset($metadata['size'])) ? " size" . $metadata['size'] : "";
-    $align = (isset($metadata['align'])) ? " " . $metadata['align'] : "";
+    $align = (isset($metadata['align'])) ? " " . $metadata['align'] : " left";
     $mt = (isset($metadata['mt'])) ? " mt" . $metadata['mt'] : " mt4";
     $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb2";
     $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
@@ -64,7 +64,7 @@ function block_text($metadata)
 {
     $text = (isset($metadata['text'])) ? $metadata['text'] : "";
     $font_size = (isset($metadata['size'])) ? " size" . $metadata['size'] : "";
-    $align = (isset($metadata['align'])) ? " " . $metadata['align'] : "";
+    $align = (isset($metadata['align'])) ? " " . $metadata['align'] : " left";
     $mt = (isset($metadata['mt'])) ? " mt" . $metadata['mt'] : " mt0";
     $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb0";
     $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
@@ -98,7 +98,7 @@ function block_link($metadata)
 {
     $link_text = (isset($metadata['text'])) ? $metadata['text'] : "";
     $link_url = (isset($metadata['url'])) ? $metadata['url'] : "";
-    $align = (isset($metadata['align'])) ? " text-" . $metadata['align'] : "";
+    $align = (isset($metadata['align'])) ? " text-" . $metadata['align'] : " text-left";
     $mt = (isset($metadata['mt'])) ? " mt" . $metadata['mt'] : " mt0";
     $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb0";
 
@@ -201,7 +201,7 @@ function block_note($metadata)
     $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb1";
     $text = (isset($metadata['text'])) ? htmlspecialchars($metadata['text']) : "";
     $type = (isset($metadata['type'])) ? " " . $metadata['type'] : " default";
-    $align = (isset($metadata['align'])) ? " text-" . $metadata['align'] : "";
+    $align = (isset($metadata['align'])) ? " text-" . $metadata['align'] : " text-left";
     $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
 
     echo '<div class="fmg-ui-block' . $mt . $mb . '">';
@@ -232,7 +232,7 @@ function block_column_open($metadata)
     $mt = (isset($metadata['mt'])) ? " mt" . $metadata['mt'] : " mt0";
     $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb0";
     $col_size = (isset($metadata['size'])) ? " size" . $metadata['size'] : " size6";
-    $align = (isset($metadata['align'])) ? " text-" . $metadata['align'] : "";
+    $align = (isset($metadata['align'])) ? " text-" . $metadata['align'] : " text-left";
     $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
     echo '<!-- open column -->';
     echo '<div class="fmg-ui-column' . $align . $col_size . $mt . $mb . '"' . $custom_style . '>';
@@ -270,7 +270,7 @@ function block_row_open($metadata)
 {
     $mt = (isset($metadata['mt'])) ? " mt" . $metadata['mt'] : " mt0";
     $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb0";
-    $align = (isset($metadata['align'])) ? " " . $metadata['align'] : "";
+    $align = (isset($metadata['align'])) ? " " . $metadata['align'] : " left";
     $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
     echo '<!-- open row -->';
     echo '<div class="fmg-ui-row' . $align . $mt . $mb . '"' . $custom_style . '>';
@@ -323,7 +323,7 @@ function block_field($metadata)
     $label = (isset($metadata['label'])) ? $metadata['label'] : "";
     $type = (isset($metadata['type'])) ? $metadata['type'] : "text";
     $hint = (isset($metadata['hint'])) ? '<p class="fmg-ui-hint">' . $metadata['hint'] . '</p>' : "";
-    $align = (isset($metadata['align'])) ? " " . $metadata['align'] : "";
+    $align = (isset($metadata['align'])) ? " " . $metadata['align'] : " left";
 
     $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
     $custom_attributes = (isset($metadata['attributes'])) ? ' ' . $metadata['attributes'] : "";
@@ -382,7 +382,7 @@ function block_menufield($metadata, $options)
     $label = (isset($metadata['label'])) ? $metadata['label'] : "";
     $type = (isset($metadata['type'])) ? $metadata['type'] : "text";
     $hint = (isset($metadata['hint'])) ? '<p class="fmg-ui-hint">' . $metadata['hint'] . '</p>' : "";
-    $align = (isset($metadata['align'])) ? " " . $metadata['align'] : "";
+    $align = (isset($metadata['align'])) ? " " . $metadata['align'] : " left";
     $dbtable = '';
 
     $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
@@ -500,7 +500,7 @@ function block_textarea($metadata)
     $text = (isset($metadata['text'])) ? htmlspecialchars($metadata['text']) : "";
     $label = (isset($metadata['label'])) ? $metadata['label'] : "";
     $hint = (isset($metadata['hint'])) ? '<p class="fmg-ui-hint">' . $metadata['hint'] . '</p>' : "";
-    $align = (isset($metadata['align'])) ? " " . $metadata['align'] : "";
+    $align = (isset($metadata['align'])) ? " " . $metadata['align'] : " left";
 
     $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
 

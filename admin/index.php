@@ -33,10 +33,9 @@ block_row_open([
 block_column_open([
     'size' => 3,
 ]);
-block_note([
-    'text' => "Sidebar",
-    'type' => 'success',
-]);
+
+require_once FMGROOT . FMGADM . '/menu.php';
+
 block_column_close();
 
 
