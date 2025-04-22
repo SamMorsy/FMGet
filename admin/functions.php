@@ -77,14 +77,10 @@ function generate_random($length = 20)
  */
 function page_admin_start($title = "", $sidebar = true, $mainbar = true, $setup_css = false)
 {
-    if (defined('FMGLANG') && '' !== FMGLANG) {
-        $language_code = FMGLANG;
-    } else {
-        $language_code = 'en-us';
-    }
+
     ?>
     <!DOCTYPE html>
-    <html lang="<?php echo $language_code;?>">
+    <html lang="<?php echo fmg_formated_language_code();?>">
 
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -418,4 +414,19 @@ function admin_auth_guard()
     }
 
     return true;
+}
+
+
+/**
+ * Makes it easier to manage the side menu for the admin area by highlighting
+ * the current section for the admin.
+ *
+ * @param string $query_item The item name to check if it's the current active section
+ * @return void
+ */
+function sidemenu_active_tag($query_item)
+{
+    if ($query_item == FMG_ACTIVE_SIDEMENU) {
+        echo ' class="active"';
+    }
 }

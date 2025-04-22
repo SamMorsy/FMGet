@@ -125,4 +125,20 @@ function txt($text) {
     return isset($fmg_translations[$text]) ? htmlspecialchars($fmg_translations[$text]) : $text;
 }
 
-
+/**
+ * Retrieves the language code and format it to be used in the html page.
+ *
+ * @return string   Formated language code.
+ */
+function fmg_formated_language_code() {
+    if (defined('FMGLANG') && '' !== FMGLANG) {
+        $language_code = FMGLANG;
+    } else {
+        $language_code = 'en-us';
+    }
+    if (strpos($language_code, '-') !== false) {
+        [$lang, $region] = explode('-', $language_code, 2);
+        return $lang . '-' . strtoupper($region);
+    }
+    return $language_code;
+}

@@ -31,9 +31,10 @@ block_row_open([
 
 
 block_column_open([
-    'size' => 3,
+    'size' => 2,
 ]);
 
+define("FMG_ACTIVE_SIDEMENU", "dashboard");
 require_once FMGROOT . FMGADM . '/menu.php';
 
 block_column_close();
@@ -41,7 +42,7 @@ block_column_close();
 
 
 block_column_open([
-    'size' => 9,
+    'size' => 10,
 ]);
 block_note([
     'text' => "Welcome to FMGet!",

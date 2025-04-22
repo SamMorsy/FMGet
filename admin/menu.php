@@ -12,53 +12,57 @@
 if (!defined('FMGROOT')) {
     exit();
 }
+// Don't load directly.
+if (!defined('FMG_ACTIVE_SIDEMENU')) {
+    exit();
+}
 
 ?>
 
 <div class="nav-container">
     <ul class="nav-menu">
-        <li><a href="<?php echo fmg_guess_url(); ?>">Go to website</a></li>
+        <li><a href="<?php echo fmg_guess_url(); ?>"><?php echo txt("sidemenu_goto_website"); ?></a></li>
 
-        <li><a href="#" class="active">Dashboard</a></li>
+        <li><a href="#"<?php sidemenu_active_tag("dashboard"); ?>><?php echo txt("sidemenu_dashboard"); ?></a></li>
 
         <li>
-            <a href="#">Pages & Theme</a>
+            <a href="#"><?php echo txt("sidemenu_pages"); ?></a>
             <ul class="sub-menu">
-                <li><a href="#">Landing Page</a></li>
-                <li><a href="#">Form Page</a></li>
-                <li><a href="#">Submit Page</a></li>
-                <li><a href="#">Customize Theme</a></li>
-                <li><a href="#">Custom CSS / JS</a></li>
-                <li><a href="#">Cookies message</a></li>
+                <li><a href="#"<?php sidemenu_active_tag("customize"); ?>><?php echo txt("sidemenu_customize"); ?></a></li>
+                <li><a href="#"<?php sidemenu_active_tag("landing"); ?>><?php echo txt("sidemenu_landing"); ?></a></li>
+                <li><a href="#"<?php sidemenu_active_tag("form"); ?>><?php echo txt("sidemenu_form"); ?></a></li>
+                <li><a href="#"<?php sidemenu_active_tag("submit"); ?>><?php echo txt("sidemenu_submit"); ?></a></li>
+                <li><a href="#"<?php sidemenu_active_tag("custom"); ?>><?php echo txt("sidemenu_custom"); ?></a></li>
+                <li><a href="#"<?php sidemenu_active_tag("cookies"); ?>><?php echo txt("sidemenu_cookies"); ?></a></li>
             </ul>
         </li>
 
         <li>
-            <a href="#">APIs</a>
+            <a href="#"><?php echo txt("sidemenu_apis"); ?></a>
             <ul class="sub-menu">
-                <li><a href="#">All APIs</a></li>
-                <li><a href="#">Add new</a></li>
+                <li><a href="#"<?php sidemenu_active_tag("all_apis"); ?>><?php echo txt("sidemenu_all_apis"); ?></a></li>
+                <li><a href="#"<?php sidemenu_active_tag("new_apis"); ?>><?php echo txt("sidemenu_new_apis"); ?></a></li>
             </ul>
         </li>
 
         <li>
-            <a href="#">Logs</a>
+            <a href="#"><?php echo txt("sidemenu_logs"); ?></a>
             <ul class="sub-menu">
-                <li><a href="#">All Logs</a></li>
-                <li><a href="#">Logs settings</a></li>
+                <li><a href="#"<?php sidemenu_active_tag("all_logs"); ?>><?php echo txt("sidemenu_all_logs"); ?></a></li>
+                <li><a href="#"<?php sidemenu_active_tag("logs_settings"); ?>><?php echo txt("sidemenu_logs_settings"); ?></a></li>
             </ul>
         </li>
 
         <li>
-            <a href="#">Settings</a>
+            <a href="#"><?php echo txt("sidemenu_settings"); ?></a>
             <ul class="sub-menu">
-                <li><a href="#">General settings</a></li>
-                <li><a href="#">FileMaker settings</a></li>
-                <li><a href="#">SEO & Accessibility</a></li>
-                <li><a href="#">Security</a></li>
+                <li><a href="#"<?php sidemenu_active_tag("general_settings"); ?>><?php echo txt("sidemenu_general_settings"); ?></a></li>
+                <li><a href="#"<?php sidemenu_active_tag("Fm_settings"); ?>><?php echo txt("sidemenu_Fm_settings"); ?></a></li>
+                <li><a href="#"<?php sidemenu_active_tag("seo"); ?>><?php echo txt("sidemenu_seo"); ?></a></li>
+                <li><a href="#"<?php sidemenu_active_tag("Security"); ?>><?php echo txt("sidemenu_Security"); ?></a></li>
             </ul>
         </li>
 
-        <li><a href="#">Log out</a></li>
+        <li><a href="#"><?php echo txt("sidemenu_logout"); ?></a></li>
     </ul>
 </div>
