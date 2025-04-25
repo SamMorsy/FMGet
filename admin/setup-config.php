@@ -161,7 +161,10 @@ switch ($step) {
         if (!fmg_is_ssl()) {
             fmg_die('<p>' . txt('error_ssl') . '</p>' . "<a href=\"setup-config.php?step=0&lang={$language_code}\">" . txt('back2') . "</a>", 'FMGet Setup');
         }
-
+        // Check if SQLite is enabled on server
+        if (!extension_loaded('sqlite3')) {
+            fmg_die('<p>' . txt('error_sqlite3') . '</p>' . "<a href=\"setup-config.php?step=0&lang={$language_code}\">" . txt('back2') . "</a>", 'FMGet Setup');
+        }
         // Check if cURL is enabled
         if (!function_exists('curl_version')) {
             fmg_die('<p>' . txt('error_curl1') . '</p>' . "<a href=\"setup-config.php?step=0&lang={$language_code}\">" . txt('back2') . "</a>", 'FMGet Setup');
@@ -572,11 +575,67 @@ switch ($step) {
             $authKey2 = generate_random(40);
             $authKey3 = generate_random(40);
             $authsalt = generate_random(40);
+            $db_name = 'ss-' . generate_random(50) . '.db';
             $root_domain = fmg_guess_url();
 
             // Hash admin password using bcrypt
             $saltedPassword = $authsalt . $postData['fmg_password'];
             $ready_password = password_hash($saltedPassword, PASSWORD_BCRYPT);
+
+            // Define the database file path
+            $dbPath = FMGROOT . FMGINC . '/data/' . generate_random(45) . '.db';
+
+            // Delete existing database file if it exists
+            if (file_exists($dbPath)) {
+                unlink($dbPath);
+            }
+
+            // Create the database
+            $db = new SQLite3($dbPath);
+
+            // Create tables
+            $tables = [
+                "CREATE TABLE IF NOT EXISTS logs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    timestamp TEXT,
+                    user TEXT,
+                    type TEXT,
+                    subject TEXT,
+                    details TEXT
+                )",
+
+                "CREATE TABLE IF NOT EXISTS settings (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT,
+                    value TEXT
+                )",
+
+                "CREATE TABLE IF NOT EXISTS apis (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    title TEXT,
+                    code TEXT,
+                    auth_type TEXT,
+                    private_key TEXT,
+                    username TEXT,
+                    password TEXT
+                )",
+
+                "CREATE TABLE IF NOT EXISTS pages (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    type TEXT,
+                    compressed_html TEXT,
+                    scheme TEXT
+                )"
+            ];
+
+            // Execute SQL for each table
+            foreach ($tables as $sql) {
+                if (!$db->exec($sql)) {
+                    if (!extension_loaded('sqlite3')) {
+                        fmg_die('<p>' . txt('fail_sqlite3') . $db->lastErrorMsg() . '</p>' . "<a href=\"setup-config.php?step=0&lang={$language_code}\">" . txt('back2') . "</a>", 'FMGet Setup');
+                    }
+                }
+            }
 
             // Duplicate the config file and save the setup configurations to the new file named 'fmg-config.php'
             $config_content = implode("", $config_file);
@@ -593,11 +652,13 @@ switch ($step) {
                     ['name' => 'FMG_SITENAME', 'value' => $postData['fmg_sitename']],
                     ['name' => 'FMG_LANG', 'value' => $language_code],
                     ['name' => 'FMG_TIMEZONE', 'value' => $postData['fmg_timezone']],
-                    ['name' => 'FMG_DATEFORMAT', 'value' => $postData['fmg_email']],
+                    ['name' => 'FMG_DATEFORMAT', 'value' => $postData['fmg_dateformat']],
 
                     ['name' => 'FMG_USER', 'value' => $postData['fmg_username']],
                     ['name' => 'FMG_PASSWORD', 'value' => $ready_password],
                     ['name' => 'FMG_EMAIL', 'value' => $postData['fmg_email']],
+
+                    ['name' => 'FMG_SQLITE_NAME', 'value' => $db_name],
 
                     ['name' => 'FMG_AUTH_KEY1', 'value' => $authKey1],
                     ['name' => 'FMG_AUTH_KEY2', 'value' => $authKey2],

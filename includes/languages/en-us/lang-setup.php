@@ -88,4 +88,7 @@ return [
 
     "alert_username_colon" => "The database username can't contain a colon ( : ) because it causes a conflict with the data API authentication.",
     "error_fmusername_colon" => "The database username must not include a colon.",
+
+    "error_sqlite3" => "SQLite3 extension is not enabled on this server.",
+    "fail_sqlite3" => "Failed to create FMGet interna database table",
 ];

@@ -51,7 +51,7 @@ function config_update($updates)
 function generate_random($length = 20)
 {
     // Define the character set (letters and numbers)
-    $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-*()';
+    $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-';
     $charactersLength = strlen($characters);
     $randomString = '';
 

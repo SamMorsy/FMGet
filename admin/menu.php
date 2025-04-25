@@ -25,6 +25,8 @@ if (!defined('FMG_ACTIVE_SIDEMENU')) {
 
         <li><a href="#"<?php sidemenu_active_tag("dashboard"); ?>><?php echo txt("sidemenu_dashboard"); ?></a></li>
 
+        <li><a href="#"<?php sidemenu_active_tag("browse"); ?>><?php echo txt("sidemenu_browse"); ?></a></li>
+
         <li>
             <a href="#"><?php echo txt("sidemenu_pages"); ?></a>
             <ul class="sub-menu">
@@ -32,6 +34,7 @@ if (!defined('FMG_ACTIVE_SIDEMENU')) {
                 <li><a href="#"<?php sidemenu_active_tag("landing"); ?>><?php echo txt("sidemenu_landing"); ?></a></li>
                 <li><a href="#"<?php sidemenu_active_tag("form"); ?>><?php echo txt("sidemenu_form"); ?></a></li>
                 <li><a href="#"<?php sidemenu_active_tag("submit"); ?>><?php echo txt("sidemenu_submit"); ?></a></li>
+                <li><a href="#"<?php sidemenu_active_tag("submit_error"); ?>><?php echo txt("sidemenu_submit_error"); ?></a></li>
                 <li><a href="#"<?php sidemenu_active_tag("custom"); ?>><?php echo txt("sidemenu_custom"); ?></a></li>
                 <li><a href="#"<?php sidemenu_active_tag("cookies"); ?>><?php echo txt("sidemenu_cookies"); ?></a></li>
             </ul>

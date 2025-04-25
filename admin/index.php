@@ -3,7 +3,7 @@
  * Front to the FMGet admin dashboard. This file loads
  * fmg-load.php and admin tools or start the setup script.
  *
- * Protected by the auth modal.
+ * Protected by the auth module.
  *
  * @package FMGet
  */
@@ -48,6 +48,11 @@ block_note([
     'text' => "Welcome to FMGet!",
     'type' => 'success',
 ]);
+block_note([
+    'text' => get_setting("test"),
+    'type' => 'success',
+]);
+
 block_column_close();
 
 

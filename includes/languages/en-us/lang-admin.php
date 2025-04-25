@@ -9,14 +9,16 @@ return [
     'login_title' => 'Sign in to continue',
     "admin_area" => "Admin Area",
 
-    "sidemenu_goto_website" => "Go to website",
+    "sidemenu_goto_website" => "View Website",
     "sidemenu_dashboard" => "Dashboard",
+    "sidemenu_browse" => "Browse Database",
 
     "sidemenu_pages" => "Pages & Theme",
     "sidemenu_customize" => "Customize Theme",
     "sidemenu_landing" => "Landing Page",
     "sidemenu_form" => "Form Page",
     "sidemenu_submit" => "Submit Page",
+    "sidemenu_submit_error" => "Error Page",
     "sidemenu_custom" => "Custom CSS / JS",
     "sidemenu_cookies" => "Cookies Message",
 

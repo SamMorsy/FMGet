@@ -5,6 +5,10 @@
  * @package FMGet
  */
 
+if (!defined('FMGROOT')) {
+    exit();
+}
+
  /**
  * Polyfill the function str_contains if not available.
  * The function is available natively with PHP 8, it is wrapped in a function_exists() check.
@@ -133,3 +137,67 @@ function fmg_guess_url() {
 	return rtrim( $url, '/' );
 }
 
+/**
+ * Retrieve the value of a setting by its name.
+ *
+ * @param string $name The name of the setting to look for.
+ * @return string The value of the setting or 'unknown' if not found.
+ */
+function get_setting(string $name): string
+{
+    $pdo = new PDO('sqlite:' . FMGROOT . FMGINC . '/data/' . FMG_SQLITE_NAME);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $stmt = $pdo->prepare('SELECT value FROM settings WHERE name = :name');
+    $stmt->bindParam(':name', $name);
+    $stmt->execute();
+
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $result ? $result['value'] : 'unknown';
+}
+
+/**
+ * Set or update the value of a setting by its name.
+ *
+ * @param string $name The name of the setting.
+ * @param string $value The value to set.
+ * @return void
+ */
+function set_setting(string $name, string $value): void
+{
+    $pdo = new PDO('sqlite:' . FMGROOT . FMGINC . '/data/' . FMG_SQLITE_NAME);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Check if the setting already exists
+    $stmt = $pdo->prepare('SELECT COUNT(*) as count FROM settings WHERE name = :name');
+    $stmt->bindParam(':name', $name);
+    $stmt->execute();
+    $exists = $stmt->fetch(PDO::FETCH_ASSOC)['count'] > 0;
+
+    if ($exists) {
+        // Update existing setting
+        $stmt = $pdo->prepare('UPDATE settings SET value = :value WHERE name = :name');
+    } else {
+        // Insert new setting
+        $stmt = $pdo->prepare('INSERT INTO settings (name, value) VALUES (:name, :value)');
+    }
+
+    $stmt->bindParam(':name', $name);
+    $stmt->bindParam(':value', $value);
+    $stmt->execute();
+}
+
+/**
+ * Retrieve the 20 most recent log entries from the logs table.
+ *
+ * @return array An array of the 20 most recent log entries.
+ */
+function get_recent_logs(): array
+{
+    $pdo = new PDO('sqlite:' . FMGROOT . FMGINC . '/data/' . FMG_SQLITE_NAME);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $stmt = $pdo->query('SELECT * FROM logs ORDER BY ROWID DESC LIMIT 20');
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}

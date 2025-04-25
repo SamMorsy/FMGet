@@ -51,7 +51,7 @@ define( 'FMG_SITEURL', 'https://example.com/fmget' );
  * The value defined is the name of this FMGet application.
  * It will show up in different locations around the system
  */
-define( 'FMG_SITENAME', 'https://example.com/fmget' );
+define( 'FMG_SITENAME', 'Company name' );
 
 /** Selected Language for FMGet */
 define( 'FMG_LANG', 'en-us' );
@@ -63,14 +63,13 @@ define( 'FMG_TIMEZONE', 'UTC' );
 define( 'FMG_DATEFORMAT', 'MM/DD/YYYY' );
 
 /**
- * Holds the id of the page / form that is marked as the homepage.
+ * Holds the name of the SQLite database.
  *
- * This page / form will be loaded if the user navigates to the root of FMGet.
+ * This name is generated randomly when using the setup script.
+ * This is done to add an extra layer of security.
  *
  */
-define( 'FMG_HOMEPAGE',         'put the id of the page' );
-
-
+define( 'FMG_SQLITE_NAME',         'put the name of the sqlite database here' );
 
 
 /**
@@ -79,7 +78,7 @@ define( 'FMG_HOMEPAGE',         'put the id of the page' );
  */
 define( 'FMG_USER',         'username_here' );
 define( 'FMG_PASSWORD',         'password_here' );
-define( 'FMG_EMAIL',         'put your unique phrase here' );
+define( 'FMG_EMAIL',         'put your admin email here' );
 
 
 
