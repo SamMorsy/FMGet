@@ -176,3 +176,27 @@
     border-left-color: #ef4444;
     /* Equivalent to red-500 */
 }
+
+
+
+/* Logs table */
+table.logs-table {
+    width: 100%;
+    font-size: 12px;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+}
+table.logs-table th, table.logs-table td {
+    border: 1px solid #cccccc81;
+    padding: 7px;
+    text-align: left;
+}
+table.logs-table th {
+    background-color: #f4f4f4;
+}
+table.logs-table tr:nth-child(even) {
+    background-color: #fafafa;
+}
+table.logs-table a.details-link:hover {
+    text-decoration: underline;
+}

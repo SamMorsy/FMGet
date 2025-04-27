@@ -14,7 +14,7 @@
  *
  * @global string $fmg_version
  */
-$fmg_version = '1.0.3-alpha-00720';
+$fmg_version = '1.0.3';
 
 /**
  * Holds the FileMaker server version, increments when changes are made to the FileMaker data api schema.

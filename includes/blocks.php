@@ -169,7 +169,7 @@ function block_separator($metadata)
  */
 function block_message($metadata)
 {
-    $text = (isset($metadata['text'])) ? htmlspecialchars($metadata['text']) : "";
+    $text = (isset($metadata['text'])) ? $metadata['text'] : "";
     $type = (isset($metadata['type'])) ? $metadata['type'] : "default";
 
     echo '<script>';
@@ -199,7 +199,7 @@ function block_note($metadata)
 {
     $mt = (isset($metadata['mt'])) ? " mt" . $metadata['mt'] : " mt1";
     $mb = (isset($metadata['mb'])) ? " mb" . $metadata['mb'] : " mb1";
-    $text = (isset($metadata['text'])) ? htmlspecialchars($metadata['text']) : "";
+    $text = (isset($metadata['text'])) ? $metadata['text'] : "";
     $type = (isset($metadata['type'])) ? " " . $metadata['type'] : " default";
     $align = (isset($metadata['align'])) ? " text-" . $metadata['align'] : " text-left";
     $custom_style = (isset($metadata['style'])) ? ' style="' . $metadata['style'] . '"' : "";
@@ -362,6 +362,7 @@ function block_field($metadata)
  * 'hint' => '', 
  * 'type' => 'text', 
  * 'disabled' => false,
+ * 'value_list' => false,
  * 'required' => false,
  * 'align' => 'left', 
  * 'mt' => '1', 
@@ -401,14 +402,28 @@ function block_menufield($metadata, $options)
 
     echo '<div class="fmg-ui-block' . $mt . $mb . '">';
     echo '<div class="fmg-ui-field-container menu">';
-    echo '<input type="' . $type . '" name="' . $name . '" value="' . $text . '" class="fmg-ui-field' . $align . $disabled_tag . '" id="input-' . $name . '" placeholder=" "' . $custom_style . $disabled_tag . ' ';
-    echo 'oninput="fmg_dropdownfilterOptions(this)" ';
-    echo 'onfocus="fmg_dropdownshow(this)" ' . $required_attr . '>';
-    echo '<label for="input-' . $name . '" class="fmg-ui-field-label">' . $label . '</label>';
-    echo '<div class="fmg-ui-field-options" onclick="fmg_dropdownselectOption(event)">';
+    // Detect if an array is associative
+    if (isset($metadata['value_list']) && $metadata['value_list'] == true) {
+        $text_value = (isset($options[$text])) ? htmlspecialchars($options[$text]) : "";
+        echo '<input type="' . $type . '" name="' . $name . '" value="' . $text_value . '" class="fmg-ui-field' . $align . $disabled_tag . '" id="input-' . $name . '" placeholder=" "' . $custom_style . $disabled_tag . ' ';
+        echo 'oninput="fmg_dropdownfilterOptions(this)" ';
+        echo 'onfocus="fmg_dropdownshow(this)" ' . $required_attr . '>';
+        echo '<label for="input-' . $name . '" class="fmg-ui-field-label">' . $label . '</label>';
 
-    foreach ($options as $entry) {
-        $dbtable .= "<div>{$entry}</div>";
+        echo '<input type="hidden" name="' . $name . '_value" value="' . $text . '" >';
+        echo '<div class="fmg-ui-field-options" onclick="fmg_dropdownselectOptionValue(event)">';
+        foreach ($options as $key => $value) {
+            $dbtable .= '<div data-secvalue="' . $key . '">' . $value . '</div>';
+        }
+    } else {
+        echo '<input type="' . $type . '" name="' . $name . '" value="' . $text . '" class="fmg-ui-field' . $align . $disabled_tag . '" id="input-' . $name . '" placeholder=" "' . $custom_style . $disabled_tag . ' ';
+        echo 'oninput="fmg_dropdownfilterOptions(this)" ';
+        echo 'onfocus="fmg_dropdownshow(this)" ' . $required_attr . '>';
+        echo '<label for="input-' . $name . '" class="fmg-ui-field-label">' . $label . '</label>';
+        echo '<div class="fmg-ui-field-options" onclick="fmg_dropdownselectOption(event)">';
+        foreach ($options as $entry) {
+            $dbtable .= "<div>{$entry}</div>";
+        }
     }
 
     echo $dbtable;
@@ -462,7 +477,7 @@ function block_checkbox($metadata)
 
     echo '<div class="fmg-ui-block' . $mt . $mb . '">';
     echo '<label class="fmg-ui-checkbox-container">';
-    echo '<input type="checkbox" name="' . $name . '" ' . $checked_tag . ' class="fmg-ui-checkbox' .  $disabled_tag . '" ' . $custom_style . $disabled_tag . ' />';
+    echo '<input type="checkbox" name="' . $name . '" ' . $checked_tag . ' class="fmg-ui-checkbox' . $disabled_tag . '" ' . $custom_style . $disabled_tag . ' />';
     echo '<span class="fmg-ui-checkmark"></span>';
     echo $label;
     echo '</label>';
@@ -565,7 +580,7 @@ function block_radio($metadata)
 
     echo '<div class="fmg-ui-block' . $mt . $mb . '">';
     echo '<label class="fmg-ui-radio-container">';
-    echo '<input type="radio" name="' . $name . '" value="' . $value . '" ' . $checked_tag . ' class="fmg-ui-radio' .  $disabled_tag . '" ' . $custom_style . $disabled_tag . ' />';
+    echo '<input type="radio" name="' . $name . '" value="' . $value . '" ' . $checked_tag . ' class="fmg-ui-radio' . $disabled_tag . '" ' . $custom_style . $disabled_tag . ' />';
     echo '<span class="fmg-ui-radiomark"></span>';
     echo $label;
     echo '</label>';
@@ -657,7 +672,7 @@ function block_buttonbasic($metadata)
     } else {
         echo '<button type="submit" class="fmg-ui-button-basic"' . $custom_style . $custom_id . '>';
     }
-    
+
     echo $text;
     echo '</button>';
     echo '</div>';
@@ -685,7 +700,7 @@ function block_form_open($metadata)
     $name = (isset($metadata['name'])) ? ' name="' . $metadata['name'] . '"' : "";
 
     echo '<!-- open form -->';
-    echo '<form target="_self" method="' . $method . '"' . $name  . $action . '>';
+    echo '<form target="_self" method="' . $method . '"' . $name . $action . '>';
 }
 
 

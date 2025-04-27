@@ -80,7 +80,7 @@ function page_admin_start($title = "", $sidebar = true, $mainbar = true, $setup_
 
     ?>
     <!DOCTYPE html>
-    <html lang="<?php echo fmg_formated_language_code();?>">
+    <html lang="<?php echo fmg_formated_language_code(); ?>">
 
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -375,7 +375,7 @@ function admin_auth_grant($username = "", $password = "")
         'httponly' => true,
         'samesite' => 'Strict'
     ]);
-    
+
 
     // Declare the session variables
     $_SESSION['fmgssk'] = FMG_AUTH_KEY1;
@@ -429,4 +429,86 @@ function sidemenu_active_tag($query_item)
     if ($query_item == FMG_ACTIVE_SIDEMENU) {
         echo ' class="active"';
     }
+}
+
+
+/**
+ * Checks the external version from fmget.com and compares it to the local version.
+ *
+ * Sends a GET request to https://fmget.com/prj1/api-version.php and validates the response.
+ * Returns the local version if it matches the remote one, otherwise returns "hide".
+ * If the request fails or the response format is invalid, also returns "hide".
+ *
+ * @global string $fmg_version The local version to compare against.
+ * @return string The local version if valid and matched, otherwise "hide".
+ */
+function fmg_version_external_check()
+{
+    global $fmg_version;
+
+    $url = 'https://fmget.com/prj1/api-version.php';
+
+    // Send GET request
+    //$response = @file_get_contents($url);
+    $response = "1.0.4";
+    // Check if request failed
+    if ($response === false) {
+        return 'hide';
+    }
+
+    // Trim and validate the response (only digits and dots, max length 10)
+    $response = trim($response);
+    if (!preg_match('/^[0-9.]+$/', $response) || strlen($response) >= 10) {
+        return 'hide';
+    }
+
+    // Compare with local version
+    if ($response === $fmg_version) {
+
+        return 'hide';
+    }
+
+    return htmlspecialchars($response);
+}
+
+
+/**
+ * Revokes the current user the right to access the admin area.
+ * 
+ * This function includes redirecting the user to the login page.
+ * 
+ * @return void
+ */
+function admin_auth_revoke()
+{
+    $cookie_name = "fmgpsk";
+    $login_path = fmg_guess_url() . '/admin/login.php';
+
+    // Start the session if it's not already started
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // Clear all session variables
+    $_SESSION = [];
+
+    // Destroy the session cookie if it exists
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(
+            $cookie_name,
+            '',
+            time() - 42000,
+            $params["path"],
+            $params["domain"],
+            $params["secure"],
+            $params["httponly"]
+        );
+    }
+    // Destroy the session
+    session_destroy();
+
+    // Redirect
+    header('Location: ' . $login_path . '?auth_error=4');
+    exit;
 }

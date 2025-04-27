@@ -99,7 +99,6 @@ function fmg_dropdownhide(inputElement, event) {
 
     // Hide dropdown if click happened outside
     dropdownMenu.classList.remove('active');
-    console.log("Canceloo");
 }
 
 /**
@@ -111,11 +110,27 @@ function fmg_dropdownhide(inputElement, event) {
 function fmg_dropdownselectOption(event) {
     const dropdownContainer = event.currentTarget.closest('.fmg-ui-field-container.menu');
     const inputElement = dropdownContainer.querySelector('input');
-    console.log("Finding the input");
 
     if (event.target.tagName === 'DIV') {
-        console.log("Replacing with " + event.target.textContent);
         inputElement.value = event.target.textContent;
+        event.currentTarget.classList.remove('active');
+    }
+}
+
+/**
+ * Stores the hidden value for a selected option from the dropdown menu in the input field.
+ *
+ * @param {event} event - The event object.
+ * @returns {void}
+ */
+function fmg_dropdownselectOptionValue(event) {
+    const dropdownContainer = event.currentTarget.closest('.fmg-ui-field-container.menu');
+    const inputElement = dropdownContainer.querySelector('.fmg-ui-field');
+    const valueElement = dropdownContainer.querySelector('input[type="hidden"]');
+
+    if (event.target.tagName === 'DIV') {
+        inputElement.value = event.target.textContent;
+        valueElement.value = event.target.getAttribute('data-secvalue');
         event.currentTarget.classList.remove('active');
     }
 }

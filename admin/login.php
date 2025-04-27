@@ -26,6 +26,10 @@ if (!fmg_is_ssl()) {
     exit;
 }
 
+//  Check for logout request.
+if (isset($_GET['logout'])) {
+    admin_auth_revoke();
+}
 
 $step = isset($_GET['step']) ? (int) $_GET['step'] : 1;
 $auth_error = isset($_GET['auth_error']) ? (int) $_GET['auth_error'] : 0;
@@ -84,6 +88,11 @@ switch ($step) {
             block_note([
                 'text' => txt('login_error3'),
                 'type' => 'warning',
+            ]);
+        }
+        if ($auth_error == 4) {
+            block_note([
+                'text' => txt('seassion_end'),
             ]);
         }
         block_field([
