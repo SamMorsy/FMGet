@@ -512,3 +512,221 @@ function admin_auth_revoke()
     header('Location: ' . $login_path . '?auth_error=4');
     exit;
 }
+
+
+/**
+ * Formats the layouts list array so it's a single level and doesn't include separators.
+ * 
+ * @return array       The list of all the valid layouts names
+ */
+function browse_format_layout_list($layouts)
+{
+    $names = [];
+
+    foreach ($layouts as $layout) {
+        if (isset($layout['isFolder']) && $layout['isFolder'] === true) {
+            // Recursively process folder contents
+            $names = array_merge($names, browse_format_layout_list($layout['folderLayoutNames']));
+        } else {
+            // Add regular layout name if it's not "-"
+            $layoutName = $layout['name'];
+            if ($layoutName !== "-") {
+                $names[] = $layoutName;
+            }
+        }
+    }
+
+    return $names;
+}
+
+/**
+ * Returns an array of all the layouts that are found inside FileMaker.
+ *
+ * @return string|array           Returns layout names array or an error code.
+ */
+function fms_get_layout_list()
+{
+    $authUrl = "https://" . FMG_DB_HOST . "/fmi/data/vLatest/databases/" . FMG_DB_NAME . "/layouts";
+    $authHeaders = [
+        "Authorization: Bearer " . $_SESSION['fmauth'],
+        "Content-Type: application/json"
+    ];
+
+    $ch = curl_init($authUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $authHeaders);
+    curl_setopt($ch, CURLOPT_HTTPGET, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Timeout after 10 seconds
+
+    $response = curl_exec($ch);
+
+    // Check for cURL errors
+    if (curl_errno($ch)) {
+        curl_close($ch);
+        return "error1"; // Server unreachable or request failed
+    }
+
+    curl_close($ch);
+
+    // Decode JSON response
+    $authData = json_decode($response, true);
+
+    // Handle JSON parsing errors
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return "error1"; // Invalid JSON response
+    }
+
+    // Validate response structure
+    if (!isset($authData['messages'][0]['message'])) {
+        return "error1"; // Unexpected response format
+    }
+
+    $responseFlag = $authData['messages'][0]['message'];
+
+    // Validate response structure
+    if ($responseFlag !== "OK") {
+        return "error2"; // Unexpected response Code
+    }
+
+    // Validate response structure
+    if (!isset($authData['response']['layouts'])) {
+        return "error2"; // Unexpected response format
+    }
+
+    $layouts = $authData['response']['layouts'];
+    //$layouttable = $layouts;
+    $layouttable = browse_format_layout_list($layouts);
+
+    return $layouttable;
+}
+
+/**
+ * Returns an array of all the records that are found using the selected layout and 
+ * the given offset and limits.
+ *
+ * @param string $records_layout    The layout
+ * @param int $records_offset       The offset for the query
+ * @param int $records_limit        The limit of the query
+ * @return string|array             Returns layout names array or an error code.
+ */
+function fms_get_records_list($records_layout, $records_offset = 1, $records_limit = 100)
+{
+    $authUrl = "https://" . FMG_DB_HOST . "/fmi/data/vLatest/databases/" . FMG_DB_NAME . "/layouts/" . $records_layout . "/records?_offset=" . $records_offset . "&_limit=" . $records_limit;
+    $authHeaders = [
+        "Authorization: Bearer " . $_SESSION['fmauth'],
+        "Content-Type: application/json"
+    ];
+
+    $ch = curl_init($authUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $authHeaders);
+    curl_setopt($ch, CURLOPT_HTTPGET, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Timeout after 10 seconds
+
+    $response = curl_exec($ch);
+
+    // Check for cURL errors
+    if (curl_errno($ch)) {
+        curl_close($ch);
+        return "error1"; // Server unreachable or request failed
+    }
+
+    curl_close($ch);
+
+    // Decode JSON response
+    $authData = json_decode($response, true);
+
+    // Handle JSON parsing errors
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return "error1"; // Invalid JSON response
+    }
+
+    // Validate response structure
+    if (!isset($authData['messages'][0]['message'])) {
+        return "error1"; // Unexpected response format
+    }
+
+    $responseFlag = $authData['messages'][0]['message'];
+
+    // Validate response structure
+    if ($responseFlag !== "OK") {
+        return "error2"; // Unexpected response Code
+    }
+
+    // Validate response structure
+    if (!isset($authData['response']['data'])) {
+        return "error2"; // Unexpected response format
+    }
+
+    $records_data = $authData['response']['data'];
+
+    return $records_data;
+}
+
+/**
+ * Escapes JSON control characters in string values within an array and then encodes the array to a JSON string.
+ *
+ * This function iterates through the input array (and any nested arrays) and applies custom escaping
+ * to all string values. The characters targeted for escaping are backslash, double quote, forward slash,
+ * and control characters (U+0000 to U+001F).
+ *
+ * Modifed to also HTML encode the array
+ * 
+ * @param mixed $data The array to process. If any other type is provided, the function returns false.
+ * @return string|false The JSON encoded string if successful, or false if the input is not an array
+ * or if json_encode() fails.
+ */
+function fms_escapeEncodeToJson($data)
+{
+    // Check if the input is a valid array
+    if (!is_array($data)) {
+        return false;
+    }
+
+    // For simplicity and directness as per typical array_walk_recursive usage, we'll modify $data directly.
+    array_walk_recursive($data, function (&$value) {
+        if (is_string($value)) {
+            // Apply escaping using preg_replace_callback for robustness
+            // This will match backslash, double quote, forward slash, and all C0 control characters (0x00-0x1F)
+            $value = htmlspecialchars(preg_replace_callback(
+                '/[\\\\\"\/\\x00-\\x1F]/', // Pattern to find characters to escape
+                function ($matches) {
+                    $char = $matches[0]; // The matched character
+                    switch ($char) {
+                        case '\\':
+                            return '\\\\'; // Escape backslash
+                        case '"':
+                            return '\\"';  // Escape double quote
+                        case '/':
+                            return '\\/';  // Escape forward slash
+                        case "\x08": // ASCII 8 -> BS (Backspace)
+                            return '\\b';
+                        case "\x0c": // ASCII 12 -> FF (Form Feed)
+                            return '\\f';
+                        case "\n":   // ASCII 10 -> LF (Newline)
+                            return '\\n';
+                        case "\r":   // ASCII 13 -> CR (Carriage Return)
+                            return '\\r';
+                        case "\t":   // ASCII 9 -> HT (Horizontal Tab)
+                            return '\\t';
+                        default:
+                            // For any other control character (U+0000-U+0007, U+000B, U+000E-U+001F)
+                            // escape as \uXXXX
+                            return sprintf('\\u%04x', ord($char));
+                    }
+                },
+                $value
+            ));
+        }
+    });
+
+    // Encode the modified array to JSON
+    $jsonOutput = json_encode($data, JSON_UNESCAPED_SLASHES );
+
+    // json_encode can return false on failure
+    if ($jsonOutput === false) {
+        return false;
+    }
+
+    return $jsonOutput;
+}

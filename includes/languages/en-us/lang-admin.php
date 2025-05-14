@@ -9,6 +9,7 @@ return [
     'login_title' => 'Sign in to continue',
     "admin_area" => "Admin Area",
     "download" => "Download",
+    "go" => "Go",
 
     "sidemenu_goto_website" => "View Website",
     "sidemenu_dashboard" => "Dashboard",
@@ -107,4 +108,11 @@ return [
     "security_confirm_label" => "Confirm New Password",
     "details_security2" => "When updating the security settings in this page, it will log out all current users from the admins area.",
 
+    "title_browse" => "Browse Database",
+
+    "browse_layoutselect_note" => "Only the fields on this layout are accessble.",
+    "browse_layoutselect_placeholder" => "Click here to select a layout",
+    "browse_layoutselect_error" => "Unable to query the list of layouts from the FileMaker server.",
+
+    "browse_layoutselect_label" => "*************",
 ];

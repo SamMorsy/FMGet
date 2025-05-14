@@ -25,7 +25,7 @@ if (!defined('FMG_ACTIVE_SIDEMENU')) {
 
         <li><a href="admin/index.php" target="_self" <?php sidemenu_active_tag("dashboard"); ?>><?php echo txt("sidemenu_dashboard"); ?></a></li>
 
-        <li><a href="#"<?php sidemenu_active_tag("browse"); ?>><?php echo txt("sidemenu_browse"); ?></a></li>
+        <li><a href="admin/browser.php" target="_self" <?php sidemenu_active_tag("browse"); ?>><?php echo txt("sidemenu_browse"); ?></a></li>
 
         <li>
             <a href="#"><?php echo txt("sidemenu_pages"); ?></a>
