@@ -1,7 +1,7 @@
 /**
  * Show the data from the JSon array inside the database browser table.
  *
- * @param {JSON} inputElement - The JSon array containing the records data.
+ * @param {JSON} jsonString - The JSon array containing the records data.
  * @returns {void}
  */
 function fmg_refreshBrowserTable(jsonString) {
