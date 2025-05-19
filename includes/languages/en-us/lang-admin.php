@@ -114,5 +114,8 @@ return [
     "browse_layoutselect_placeholder" => "Click here to select a layout",
     "browse_layoutselect_error" => "Unable to query the list of layouts from the FileMaker server.",
 
-    "browse_layoutselect_label" => "*************",
+    "browse_nav_records" => "Browse records",
+
+    "browse_page_next" => "Next Page",
+    "browse_page_previous" => "Previous Page",
 ];

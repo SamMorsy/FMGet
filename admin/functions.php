@@ -609,9 +609,14 @@ function fms_get_layout_list()
  * @param int $records_limit        The limit of the query
  * @return string|array             Returns layout names array or an error code.
  */
-function fms_get_records_list($records_layout, $records_offset = 1, $records_limit = 100)
+function fms_get_records_list($records_layout, $records_offset = 1, $records_limit = 100, $sort_field = "", $sort_type = "")
 {
     $authUrl = "https://" . FMG_DB_HOST . "/fmi/data/vLatest/databases/" . FMG_DB_NAME . "/layouts/" . $records_layout . "/records?_offset=" . $records_offset . "&_limit=" . $records_limit;
+
+    //Sorting query
+    if (!empty($sort_field)) {
+        $authUrl .= "&_sort=[{ \"fieldName\": \"" . $sort_field . "\", \"sortOrder\": \"" . $sort_type . "\" }]";
+    }
     $authHeaders = [
         "Authorization: Bearer " . $_SESSION['fmauth'],
         "Content-Type: application/json"
