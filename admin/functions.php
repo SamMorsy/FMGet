@@ -609,7 +609,7 @@ function fms_get_layout_list()
  * @param int $records_limit        The limit of the query
  * @return string|array             Returns layout names array or an error code.
  */
-function fms_get_records_list($records_layout, $records_offset = 1, $records_limit = 100, $sort_field = "", $sort_type = "")
+function fms_get_records_list($records_layout, $records_offset = 1, $records_limit = 50, $sort_field = "", $sort_type = "")
 {
     $authUrl = "https://" . FMG_DB_HOST . "/fmi/data/vLatest/databases/" . FMG_DB_NAME . "/layouts/" . $records_layout . "/records?_offset=" . $records_offset . "&_limit=" . $records_limit;
 
@@ -663,9 +663,7 @@ function fms_get_records_list($records_layout, $records_offset = 1, $records_lim
         return "error2"; // Unexpected response format
     }
 
-    $records_data = $authData['response']['data'];
-
-    return $records_data;
+    return $authData;
 }
 
 /**
@@ -689,7 +687,7 @@ function fms_escapeEncodeToJson($data)
     }
 
     // For simplicity and directness as per typical array_walk_recursive usage, we'll modify $data directly.
-    array_walk_recursive($data, function (&$value) {
+    array_walk_recursive($data['response']['data'], function (&$value) {
         if (is_string($value)) {
             // Apply escaping using preg_replace_callback for robustness
             // This will match backslash, double quote, forward slash, and all C0 control characters (0x00-0x1F)
@@ -703,7 +701,7 @@ function fms_escapeEncodeToJson($data)
                         case '"':
                             return '\\"';  // Escape double quote
                         case '/':
-                            return '\\/';  // Escape forward slash
+                            return '/';  // Escape forward slash (Disabled)
                         case "\x08": // ASCII 8 -> BS (Backspace)
                             return '\\b';
                         case "\x0c": // ASCII 12 -> FF (Form Feed)
@@ -726,7 +724,7 @@ function fms_escapeEncodeToJson($data)
     });
 
     // Encode the modified array to JSON
-    $jsonOutput = json_encode($data, JSON_UNESCAPED_SLASHES );
+    $jsonOutput = json_encode($data, JSON_UNESCAPED_SLASHES);
 
     // json_encode can return false on failure
     if ($jsonOutput === false) {

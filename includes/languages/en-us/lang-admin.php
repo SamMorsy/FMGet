@@ -118,4 +118,22 @@ return [
 
     "browse_page_next" => "Next Page",
     "browse_page_previous" => "Previous Page",
+
+    "browse_msg_waiting" => "Loading the data, Please wait.",
+    "browse_msg_failed" => "Faild to load the data, please try again.",
+
+    "msg_nav_settings" => "Filter / Sort",
+
+    "msg_nav_refresh" => "Refresh",
+
+    "msg_nav_nodata" => "No data was found.",
+    "browse_nav_options" => "Options",
+
+    "browse_limit_placeholder" => "Records per page",
+    "browse_offset_placeholder" => "Offset record",
+    "browse_sort_type_placeholder" => "Sort direction",
+    "browse_sort_field_placeholder" => "Sort by",
+
+    "browse_sort_type_ascend" => "Ascend",
+    "browse_sort_type_descend" => "Descend",
 ];

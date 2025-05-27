@@ -341,8 +341,8 @@ function block_field($metadata)
 
     echo '<div class="fmg-ui-block' . $mt . $mb . '">';
     echo '<div class="fmg-ui-field-container">';
-    echo '<input type="' . $type . '" name="' . $name . '" value="' . $text . '" class="fmg-ui-field' . $align . $disabled_tag . '" id="input-' . $name . '" placeholder=" "' . $custom_style . $spellcheck_tag . $custom_attributes . $disabled_tag . ' />';
-    echo '<label for="input-' . $name . '" class="fmg-ui-field-label">' . $label . '</label>';
+    echo '<input type="' . $type . '" name="' . $name . '" value="' . $text . '" class="fmg-ui-field' . $align . $disabled_tag . '" id="input_' . $name . '" placeholder=" "' . $custom_style . $spellcheck_tag . $custom_attributes . $disabled_tag . ' />';
+    echo '<label for="input_' . $name . '" class="fmg-ui-field-label">' . $label . '</label>';
     echo '</div>';
     echo $hint;
     echo '</div>';
@@ -359,6 +359,7 @@ function block_field($metadata)
  * 'label' => '', 
  * 'text' => '', 
  * 'name' => '', 
+ * 'id' => '', 
  * 'hint' => '', 
  * 'type' => 'text', 
  * 'disabled' => false,
@@ -405,10 +406,10 @@ function block_menufield($metadata, $options)
     // Detect if an array is associative
     if (isset($metadata['value_list']) && $metadata['value_list'] == true) {
         $text_value = (isset($options[$text])) ? htmlspecialchars($options[$text]) : "";
-        echo '<input type="' . $type . '" name="' . $name . '" value="' . $text_value . '" class="fmg-ui-field' . $align . $disabled_tag . '" id="input-' . $name . '" placeholder=" "' . $custom_style . $disabled_tag . ' ';
+        echo '<input type="' . $type . '" name="' . $name . '" value="' . $text_value . '" class="fmg-ui-field' . $align . $disabled_tag . '" id="input_' . $name . '" placeholder=" "' . $custom_style . $disabled_tag . ' ';
         echo 'oninput="fmg_dropdownfilterOptions(this)" ';
         echo 'onfocus="fmg_dropdownshow(this)" ' . $required_attr . '>';
-        echo '<label for="input-' . $name . '" class="fmg-ui-field-label">' . $label . '</label>';
+        echo '<label for="input_' . $name . '" class="fmg-ui-field-label">' . $label . '</label>';
 
         echo '<input type="hidden" name="' . $name . '_value" value="' . $text . '" >';
         echo '<div class="fmg-ui-field-options" onclick="fmg_dropdownselectOptionValue(event)">';
@@ -416,10 +417,10 @@ function block_menufield($metadata, $options)
             $dbtable .= '<div data-secvalue="' . $key . '">' . $value . '</div>';
         }
     } else {
-        echo '<input type="' . $type . '" name="' . $name . '" value="' . $text . '" class="fmg-ui-field' . $align . $disabled_tag . '" id="input-' . $name . '" placeholder=" "' . $custom_style . $disabled_tag . ' ';
+        echo '<input type="' . $type . '" name="' . $name . '" value="' . $text . '" class="fmg-ui-field' . $align . $disabled_tag . '" id="input_' . $name . '" placeholder=" "' . $custom_style . $disabled_tag . ' ';
         echo 'oninput="fmg_dropdownfilterOptions(this)" ';
         echo 'onfocus="fmg_dropdownshow(this)" ' . $required_attr . '>';
-        echo '<label for="input-' . $name . '" class="fmg-ui-field-label">' . $label . '</label>';
+        echo '<label for="input_' . $name . '" class="fmg-ui-field-label">' . $label . '</label>';
         echo '<div class="fmg-ui-field-options" onclick="fmg_dropdownselectOption(event)">';
         foreach ($options as $entry) {
             $dbtable .= "<div>{$entry}</div>";
@@ -527,8 +528,8 @@ function block_textarea($metadata)
 
     echo '<div class="fmg-ui-block' . $mt . $mb . '">';
     echo '<div class="fmg-ui-field-container">';
-    echo '<textarea name="' . $name . '" class="fmg-ui-textarea' . $align . $disabled_tag . '" id="input-' . $name . '" placeholder=" "' . $custom_style . $disabled_tag . ' />' . $text . '</textarea> ';
-    echo '<label for="input-' . $name . '" class="fmg-ui-textarea-label">' . $label . '</label>';
+    echo '<textarea name="' . $name . '" class="fmg-ui-textarea' . $align . $disabled_tag . '" id="input_' . $name . '" placeholder=" "' . $custom_style . $disabled_tag . ' />' . $text . '</textarea> ';
+    echo '<label for="input_' . $name . '" class="fmg-ui-textarea-label">' . $label . '</label>';
     echo '</div>';
     echo $hint;
     echo '</div>';
@@ -721,7 +722,8 @@ function block_form_close()
  * needed using the metadata and echo it to the user.
  *
  * [
- * 'value' => '', 
+ * 'value' => '',
+ * 'id' => '', 
  * 'name' => ''
  * ]
  * 
@@ -733,6 +735,7 @@ function block_hidden_field($metadata)
 
     $value = (isset($metadata['value'])) ? ' value="' . htmlspecialchars($metadata['value']) . '"' : "";
     $name = (isset($metadata['name'])) ? ' name="' . $metadata['name'] . '"' : "";
+    $id_tag = (isset($metadata['id'])) ? ' id="' . $metadata['id'] . '"' : "";
 
-    echo '<input type="hidden"' . $name . $value . '>';
+    echo '<input type="hidden"' . $id_tag . $name . $value . '>';
 }

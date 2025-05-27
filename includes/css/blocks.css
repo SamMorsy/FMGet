@@ -134,6 +134,7 @@ body {
     color: #005d76;
     text-decoration: none;
     font-size: 13px;
+    cursor: pointer;
 }
 
 /* message block */

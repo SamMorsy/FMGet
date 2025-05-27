@@ -20,7 +20,6 @@ require FMGROOT . 'fmg-load.php';
 require_once FMGROOT . FMGADM . '/functions.php';
 require_once FMGROOT . FMGINC . '/blocks.php';
 fmg_load_language(FMG_LANG, 'admin');
-fms_refresh_auth_key(FMG_DB_HOST, FMG_DB_NAME, FMG_DB_USER, FMG_DB_PASSWORD);
 
 /**
  * Auth check
@@ -35,8 +34,8 @@ $sort_field = "";
 $sort_type = "ascend";
 $records_dataset = "";
 $records_offset = 1;
-$records_limit = 100;
-$layout_list = fms_get_layout_list();
+$records_limit = 50;
+$layout_list = [];
 $form_errors = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Store POST data in session
@@ -47,7 +46,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     header("Location: " . $_SERVER['PHP_SELF'] . $queryString);
     exit();
 }
+
+// Update table body and header
 if (isset($_GET["action"]) && $_GET["action"] == "update" && isset($_SESSION['post_data'])) {
+    fms_refresh_auth_key(FMG_DB_HOST, FMG_DB_NAME, FMG_DB_USER, FMG_DB_PASSWORD);
 
     // Retrieve stored data after redirection
     $postData = $_SESSION['post_data'];
@@ -57,7 +59,7 @@ if (isset($_GET["action"]) && $_GET["action"] == "update" && isset($_SESSION['po
     }
 
     $selected_layout = $postData['fmg_browse_layout'];
-    $layout_name_url = urldecode($selected_layout);
+    $layout_name_url = rawurlencode($selected_layout);
 
     if (isset($postData['fmg_browse_sort_field']) && !empty($postData['fmg_browse_sort_field'])) {
         $sort_field = $postData['fmg_browse_sort_field'];
@@ -70,15 +72,17 @@ if (isset($_GET["action"]) && $_GET["action"] == "update" && isset($_SESSION['po
     }
     if (isset($postData['fmg_browse_records_offset']) && !empty($postData['fmg_browse_records_offset'])) {
         $records_offset = $postData['fmg_browse_records_offset'];
-        $page_index = floor($records_offset / $records_limit) +1;
     }
 
-
     $records_dataset = fms_get_records_list($layout_name_url, $records_offset, $records_limit, $sort_field, $sort_type);
+
+    echo fms_escapeEncodeToJson($records_dataset);
+    exit();
 }
 
-//Build status header
-$state_header = "[ " . txt("browse_nav_records") . " ] " . $selected_layout;
+
+fms_refresh_auth_key(FMG_DB_HOST, FMG_DB_NAME, FMG_DB_USER, FMG_DB_PASSWORD);
+$layout_list = fms_get_layout_list();
 
 page_admin_start(txt('admin_area'));
 block_row_open([
@@ -129,6 +133,7 @@ if ($layout_list == "error1" || $layout_list == "error2") {
     block_menufield([
         'label' => txt('browse_layoutselect_placeholder'),
         'text' => $selected_layout,
+        'id' => 'fmg_browse_layout',
         'name' => 'fmg_browse_layout',
         'hint' => txt('browse_layoutselect_note'),
         'mt' => '4',
@@ -143,6 +148,8 @@ if ($layout_list == "error1" || $layout_list == "error2") {
 
     block_buttonbasic([
         'text' => txt('go'),
+        'type' => 'js',
+        'target' => 'fmg_changeBrowserState(\'layout\')',
         'mt' => 4,
         'style' => 'padding: 11px;',
     ]);
@@ -150,21 +157,25 @@ if ($layout_list == "error1" || $layout_list == "error2") {
 
 block_hidden_field([
     "value" => $records_limit,
+    "id" => "fmg_browse_records_limit",
     "name" => "fmg_browse_records_limit"
 ]);
 
 block_hidden_field([
     "value" => $records_offset,
+    "id" => "fmg_browse_records_offset",
     "name" => "fmg_browse_records_offset"
 ]);
 
 block_hidden_field([
     "value" => $sort_type,
+    "id" => "fmg_browse_sort_type",
     "name" => "fmg_browse_sort_type"
 ]);
 
 block_hidden_field([
     "value" => $sort_field,
+    "id" => "fmg_browse_sort_field",
     "name" => "fmg_browse_sort_field"
 ]);
 
@@ -175,23 +186,10 @@ block_form_close();
 
 ?>
 
+<div class="browser-nav" id="browserNav">
 
-<div class="browser-nav">
-    <div class="browser-nav-left">
-        <?php echo $state_header; ?>
-    </div>
-    <div class="browser-nav-right">
-        <div class="browser-nav-item">
-            <?php block_link([ 'text' => "<< " . txt("browse_page_previous"), 'url' => $records_offset - $records_limit ]); ?>
-        </div>
-        <div class="browser-nav-item">
-            <?php echo $page_index; ?>
-        </div>
-        <div class="browser-nav-item">
-            <?php block_link([ 'text' => txt("browse_page_next") . " >>", 'url' => $records_offset + $records_limit ]); ?>
-        </div>
-    </div>
 </div>
+
 <div class="browser-container">
     <table id="dynamicTable">
         <thead>
@@ -203,15 +201,76 @@ block_form_close();
     </table>
 </div>
 
-<script>
-// DB Browser JSON array data handler
-<?php
-    if (!empty($records_dataset)) {
-        echo "const jsonString2 = `" . fms_escapeEncodeToJson($records_dataset) . "`;";
-        echo "window.onload = function () {fmg_refreshBrowserTable(jsonString2);};";
-    }
-?>
 
+<div id="fmg_browse_modal_overlay" class="fmg_browse_modal_backdrop">
+    <div id="fmg_browse_modal" class="fmg_browse_modal_content">
+        <div class="fmg_browse_modal_header">
+            <h2 class="fmg_browse_modal_title"><?php echo txt("browse_nav_options"); ?></h2>
+            <button id="fmg_browse_close_modal_button_header" class="fmg_browse_modal_close_button"
+                onclick="fmg_browse_closeModal()">&times;</button>
+        </div>
+        <div class="fmg_browse_modal_body">
+            <?php
+
+            block_menufield([
+                'label' => txt('browse_sort_field_placeholder'),
+                'text' => '',
+                'name' => 'fmg_browse_option_sort_field',
+                'mt' => '4',
+                'mb' => '3',
+            ], []);
+
+            block_menufield([
+                'label' => txt('browse_sort_type_placeholder'),
+                'text' => $sort_type,
+                'value_list' => true,
+                'name' => 'fmg_browse_option_sort_type',
+                'mt' => '4',
+                'mb' => '4',
+            ], [
+                "ascend" => txt("browse_sort_type_ascend"),
+                "descend" => txt("browse_sort_type_descend"),
+            ]);
+
+            block_menufield([
+                'label' => txt('browse_limit_placeholder'),
+                'text' => $records_limit,
+                'name' => 'fmg_browse_option_limit',
+                'mt' => '4',
+                'mb' => '4',
+            ], [
+                "20",
+                "50",
+                "100",
+            ]);
+
+            block_field([
+                'label' => txt('browse_offset_placeholder'),
+                'text' => $records_offset,
+                'name' => 'fmg_browse_option_offset',
+            ]);
+
+            ?>
+        </div>
+        <div class="fmg_browse_modal_footer">
+            <button id="fmg_browse_submit_modal_button" class="fmg_browse_modal_submit_button"
+                onclick="fmg_browse_handleSubmit()"><?php echo txt("update"); ?></button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    const msg_waiting = '<?php echo "<strong>" . txt("browse_msg_waiting") . "</strong>"; ?>';
+    const msg_fail = '<?php echo "<strong>" . txt("browse_msg_failed") . "</strong>"; ?>';
+
+    const msg_nav_title = '<?php echo txt("browse_nav_records"); ?>';
+    const msg_nav_next = '<?php echo txt("browse_page_next"); ?>';
+    const msg_nav_previous = '<?php echo txt("browse_page_previous"); ?>';
+
+    const msg_nav_settings = '<?php echo txt("msg_nav_settings"); ?>';
+    const msg_nav_refresh = '<?php echo txt("msg_nav_refresh"); ?>';
+    const msg_nav_nodata = '<?php echo txt("msg_nav_nodata"); ?>';
 </script>
 
 <?php
