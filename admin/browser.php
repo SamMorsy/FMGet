@@ -37,6 +37,10 @@ $records_offset = 1;
 $records_limit = 50;
 $layout_list = [];
 $form_errors = "";
+
+$search_field = "";
+$search_value = "";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Store POST data in session
     $_SESSION['post_data'] = $_POST;
@@ -74,8 +78,16 @@ if (isset($_GET["action"]) && $_GET["action"] == "update" && isset($_SESSION['po
         $records_offset = $postData['fmg_browse_records_offset'];
     }
 
-    $records_dataset = fms_get_records_list($layout_name_url, $records_offset, $records_limit, $sort_field, $sort_type);
+    if (isset($postData['fmg_browse_records_searchField']) && !empty($postData['fmg_browse_records_searchField'])) {
+        $search_field = $postData['fmg_browse_records_searchField'];
+    }
+    if (isset($postData['fmg_browse_records_searchValue']) && !empty($postData['fmg_browse_records_searchValue'])) {
+        $search_value = $postData['fmg_browse_records_searchValue'];
+    }
 
+    $records_dataset = fms_get_records_list($layout_name_url, $records_offset, $records_limit, $sort_field, $sort_type, $search_field, $search_value);
+
+    //echo $records_dataset;
     echo fms_escapeEncodeToJson($records_dataset);
     exit();
 }
@@ -205,7 +217,7 @@ block_form_close();
 <div id="fmg_browse_modal_overlay" class="fmg_browse_modal_backdrop">
     <div id="fmg_browse_modal" class="fmg_browse_modal_content">
         <div class="fmg_browse_modal_header">
-            <h2 class="fmg_browse_modal_title"><?php echo txt("browse_nav_options"); ?></h2>
+            <h2 class="fmg_browse_modal_title"><?php echo txt("browse_nav_options_sort"); ?></h2>
             <button id="fmg_browse_close_modal_button_header" class="fmg_browse_modal_close_button"
                 onclick="fmg_browse_closeModal()">&times;</button>
         </div>
@@ -259,6 +271,38 @@ block_form_close();
     </div>
 </div>
 
+<div id="fmg_browse_filter_overlay" class="fmg_browse_filter_backdrop">
+    <div id="fmg_browse_modal" class="fmg_browse_filter_content">
+        <div class="fmg_browse_filter_header">
+            <h2 class="fmg_browse_filter_title"><?php echo txt("browse_nav_options_filter"); ?></h2>
+            <button id="fmg_browse_close_filter_button_header" class="fmg_browse_filter_close_button"
+                onclick="fmg_browse_closeFilter()">&times;</button>
+        </div>
+        <div class="fmg_browse_filter_body">
+            <?php
+
+            block_menufield([
+                'label' => txt('browse_search_field_placeholder'),
+                'text' => '',
+                'name' => 'fmg_browse_option_search_field',
+                'mt' => '4',
+                'mb' => '3',
+            ], []);
+
+            block_field([
+                'label' => txt('browse_search_value_placeholder'),
+                'text' => '',
+                'name' => 'fmg_browse_option_search_value',
+            ]);
+
+            ?>
+        </div>
+        <div class="fmg_browse_filter_footer">
+            <button id="fmg_browse_submit_filter_button" class="fmg_browse_filter_submit_button"
+                onclick="fmg_browse_filterSubmit()"><?php echo txt("update"); ?></button>
+        </div>
+    </div>
+</div>
 
 <script>
     const msg_waiting = '<?php echo "<strong>" . txt("browse_msg_waiting") . "</strong>"; ?>';
@@ -271,6 +315,8 @@ block_form_close();
     const msg_nav_settings = '<?php echo txt("msg_nav_settings"); ?>';
     const msg_nav_refresh = '<?php echo txt("msg_nav_refresh"); ?>';
     const msg_nav_nodata = '<?php echo txt("msg_nav_nodata"); ?>';
+
+    const msg_nav_filter = '<?php echo txt("msg_nav_filter"); ?>';
 </script>
 
 <?php

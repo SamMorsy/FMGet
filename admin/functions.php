@@ -609,26 +609,74 @@ function fms_get_layout_list()
  * @param int $records_limit        The limit of the query
  * @return string|array             Returns layout names array or an error code.
  */
-function fms_get_records_list($records_layout, $records_offset = 1, $records_limit = 50, $sort_field = "", $sort_type = "")
+function fms_get_records_list($records_layout, $records_offset = 1, $records_limit = 50, $sort_field = "", $sort_type = "", $search_field = "", $search_value = "")
 {
-    $authUrl = "https://" . FMG_DB_HOST . "/fmi/data/vLatest/databases/" . FMG_DB_NAME . "/layouts/" . $records_layout . "/records?_offset=" . $records_offset . "&_limit=" . $records_limit;
+    if (!empty($search_field)) {
+        $authUrl = "https://" . FMG_DB_HOST . "/fmi/data/vLatest/databases/" . FMG_DB_NAME . "/layouts/" . $records_layout . "/_find";
 
-    //Sorting query
-    if (!empty($sort_field)) {
-        $authUrl .= "&_sort=[{ \"fieldName\": \"" . $sort_field . "\", \"sortOrder\": \"" . $sort_type . "\" }]";
+        $data = [
+            'query' => [
+                [
+                    $search_field => $search_value
+                ]
+            ],
+            'sort' => [
+                [
+                    'fieldName' => $sort_field,
+                    'sortOrder' => strtolower($sort_type)
+                ]
+            ],
+            'offset' => $records_offset,
+            'limit' => $records_limit
+        ];
+
+
+        // echo json_encode($data);
+        // exit();
+
+        $ch = curl_init($authUrl);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+                "Authorization: Bearer " . $_SESSION['fmauth']
+            ],
+            CURLOPT_POSTFIELDS => json_encode($data)
+        ]);
+
+    } else {
+        $authUrl = "https://" . FMG_DB_HOST . "/fmi/data/vLatest/databases/" . FMG_DB_NAME . "/layouts/" . $records_layout . "/records?_offset=" . $records_offset . "&_limit=" . $records_limit;
+
+        //Sorting query
+        if (!empty($sort_field)) {
+            $sort_array = [
+                [
+                    'fieldName' => $sort_field,
+                    'sortOrder' => strtolower($sort_type)
+                ]
+            ];
+            $sort_param = urlencode(json_encode($sort_array));
+            $authUrl .= "&_sort={$sort_param}";
+        }
+        $authHeaders = [
+            "Authorization: Bearer " . $_SESSION['fmauth'],
+            "Content-Type: application/json"
+        ];
+
+
+        $ch = curl_init($authUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $authHeaders);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Timeout after 10 seconds
     }
-    $authHeaders = [
-        "Authorization: Bearer " . $_SESSION['fmauth'],
-        "Content-Type: application/json"
-    ];
 
-    $ch = curl_init($authUrl);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $authHeaders);
-    curl_setopt($ch, CURLOPT_HTTPGET, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Timeout after 10 seconds
 
     $response = curl_exec($ch);
+
+    // echo $response;
+    // exit();
 
     // Check for cURL errors
     if (curl_errno($ch)) {

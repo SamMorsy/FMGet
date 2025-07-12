@@ -1,9 +1,42 @@
 // Ensure all JS variables and functions start with fmg_browse_
-var fmg_browse_openModalButton = document.getElementById('fmg_browse_trigger_button');
 var fmg_browse_modalOverlay = document.getElementById('fmg_browse_modal_overlay');
-// var fmg_browse_modalElement = document.getElementById('fmg_browse_modal'); // Not directly used for event handling now
 var fmg_browse_closeModalButtonHeader = document.getElementById('fmg_browse_close_modal_button_header');
 var fmg_browse_submitModalButton = document.getElementById('fmg_browse_submit_modal_button');
+
+var fmg_browse_filterOverlay = document.getElementById('fmg_browse_filter_overlay');
+var fmg_browse_closeFilterButtonHeader = document.getElementById('fmg_browse_close_filter_button_header');
+var fmg_browse_submitFilterButton = document.getElementById('fmg_browse_submit_filter_button');
+
+/**
+ * @function fmg_browse_openFilter
+ * @description Displays the modal dialog and its backdrop.
+ */
+function fmg_browse_openFilter() {
+    if (fmg_browse_filterOverlay) {
+        fmg_browse_filterOverlay.classList.add('fmg_browse_filter_visible');
+    }
+}
+
+/**
+ * @function fmg_browse_closeFilter
+ * @description Hides the modal dialog and its backdrop.
+ */
+function fmg_browse_closeFilter() {
+    if (fmg_browse_filterOverlay) {
+        fmg_browse_filterOverlay.classList.remove('fmg_browse_filter_visible');
+    }
+}
+
+/**
+ * @function fmg_browse_filterSubmit
+ * @description Handles the submit button click. Currently logs a message and closes the modal.
+ */
+function fmg_browse_filterSubmit() {
+    console.log('FMG Browse: Submit button clicked');
+    fmg_browse_closeFilter(); // Closes modal on submit for now
+
+    fmg_changeBrowserState('refresh');
+}
 
 /**
  * @function fmg_browse_openModal
@@ -31,8 +64,21 @@ function fmg_browse_closeModal() {
  */
 function fmg_browse_handleSubmit() {
     console.log('FMG Browse: Submit button clicked');
-    // Add actual submit logic here if needed
     fmg_browse_closeModal(); // Closes modal on submit for now
+
+    document.getElementById('fmg_browse_sort_field').value =
+        document.getElementById('input_fmg_browse_option_sort_field')?.value || '';
+
+    document.getElementById('fmg_browse_sort_type').value =
+        document.getElementById('input_fmg_browse_option_sort_type')?.value || '';
+
+    document.getElementById('fmg_browse_records_limit').value =
+        document.getElementById('input_fmg_browse_option_limit')?.value || '';
+
+    document.getElementById('fmg_browse_records_offset').value =
+        document.getElementById('input_fmg_browse_option_offset')?.value || '';
+
+    fmg_changeBrowserState('refresh');
 }
 
 /**
@@ -94,11 +140,35 @@ function fmg_refreshBrowserTable(jsonString) {
         // Get headers from the first object's keys
         const headers = Object.keys(dataArray[0]["fieldData"]);
 
-        // Create table header row
+        // Get the options container and clear its content
+        const inputElement = document.getElementById('input_fmg_browse_option_sort_field');
+        const optionsContainer = inputElement?.parentElement?.querySelector('.fmg-ui-field-options');
+        const filterInputElement = document.getElementById('input_fmg_browse_option_search_field');
+        const filterOptionsContainer = filterInputElement?.parentElement?.querySelector('.fmg-ui-field-options');
+        if (optionsContainer) {
+            optionsContainer.innerHTML = ''; // Clear existing options
+        }
+
+        // Create table header row and populate options
         headers.forEach(headerText => {
+            // Create and append <th> to the table header
             const headerCell = document.createElement('th');
             headerCell.textContent = headerText;
             tableHeader.appendChild(headerCell);
+
+            // Also create and append a <div> for each headerText into the options container
+            if (optionsContainer) {
+                const optionDiv = document.createElement('div');
+                optionDiv.textContent = headerText;
+                optionsContainer.appendChild(optionDiv);
+            }
+
+            // Also create and append a <div> for each headerText into the filter options container
+            if (filterOptionsContainer) {
+                const filterOptionDiv = document.createElement('div');
+                filterOptionDiv.textContent = headerText;
+                filterOptionsContainer.appendChild(filterOptionDiv);
+            }
         });
 
         // Create table body rows
@@ -157,6 +227,9 @@ async function fmg_changeBrowserState(changeType) {
     const sortField = document.getElementById('fmg_browse_sort_field')?.value;
     const sortType = document.getElementById('fmg_browse_sort_type')?.value;
     const recordsLimit = document.getElementById('fmg_browse_records_limit')?.value;
+
+    const searchField = document.getElementById('input_fmg_browse_option_search_field')?.value;
+    const searchValue = document.getElementById('input_fmg_browse_option_search_value')?.value;
     if (changeType == "previous") {
         const recordsOffsetOldString = document.getElementById('fmg_browse_records_offset')?.value;
         const recordsOffsetOld = parseInt(recordsOffsetOldString, 10); // Convert to number
@@ -205,7 +278,8 @@ async function fmg_changeBrowserState(changeType) {
     if (sortType !== undefined) formData.append('fmg_browse_sort_type', sortType);
     if (recordsLimit !== undefined) formData.append('fmg_browse_records_limit', recordsLimit);
     if (recordsOffset !== undefined) formData.append('fmg_browse_records_offset', recordsOffset);
-
+    if (searchField !== undefined) formData.append('fmg_browse_records_searchField', searchField);
+    if (searchValue !== undefined) formData.append('fmg_browse_records_searchValue', searchValue);
     try {
         // Send POST request to update browser content
         console.log('Sending request to:', updateUrl);
@@ -227,6 +301,9 @@ async function fmg_changeBrowserState(changeType) {
                         <div class="browser-nav-item" style="margin-left: 10px;">
                             [ ${msg_nav_title} ] ${layout}
                         </div>
+                    </div>
+                    <div class="browser-nav-center">
+                        <a target="_self" onclick="fmg_browse_openFilter()" class="fmg-ui-link"> ${msg_nav_filter}</a>
                     </div>
                     <div class="browser-nav-center">
                         <a target="_self" onclick="fmg_browse_openModal()" class="fmg-ui-link"> ${msg_nav_settings}</a>

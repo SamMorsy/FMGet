@@ -122,12 +122,13 @@ return [
     "browse_msg_waiting" => "Loading the data, Please wait.",
     "browse_msg_failed" => "Faild to load the data, please try again.",
 
-    "msg_nav_settings" => "Filter / Sort",
+    "msg_nav_settings" => "Sort Records",
 
     "msg_nav_refresh" => "Refresh",
 
     "msg_nav_nodata" => "No data was found.",
-    "browse_nav_options" => "Options",
+    "browse_nav_options_sort" => "Sort options",
+    "browse_nav_options_filter" => "Filter options",
 
     "browse_limit_placeholder" => "Records per page",
     "browse_offset_placeholder" => "Offset record",
@@ -136,4 +137,9 @@ return [
 
     "browse_sort_type_ascend" => "Ascend",
     "browse_sort_type_descend" => "Descend",
+
+    "msg_nav_filter" => "Filter Records",
+
+    "browse_search_field_placeholder" => "Field name",
+    "browse_search_value_placeholder" => "Query",
 ];
