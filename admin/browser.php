@@ -92,6 +92,35 @@ if (isset($_GET["action"]) && $_GET["action"] == "update" && isset($_SESSION['po
     exit();
 }
 
+// Update table body and header
+if (isset($_GET["action"]) && $_GET["action"] == "update_field" && isset($_SESSION['post_data'])) {
+    fms_refresh_auth_key(FMG_DB_HOST, FMG_DB_NAME, FMG_DB_USER, FMG_DB_PASSWORD);
+
+    // Retrieve stored data after redirection
+    $postData = $_SESSION['post_data'];
+
+    if (!isset($postData['fmg_browse_edit_layout']) || empty($postData['fmg_browse_edit_layout'])) {
+        $form_errors .= txt("error_fmgusername_required") . "<br>";
+    }
+
+    $selected_layout = $postData['fmg_browse_edit_layout'];
+    $layout_name_url = rawurlencode($selected_layout);
+
+    if (isset($postData['fmg_browse_edit_id']) && !empty($postData['fmg_browse_edit_id'])) {
+        $edit_id = $postData['fmg_browse_edit_id'];
+    }
+    if (isset($postData['fmg_browse_edit_name']) && !empty($postData['fmg_browse_edit_name'])) {
+        $edit_name = $postData['fmg_browse_edit_name'];
+    }
+    if (isset($postData['fmg_browse_edit_value']) && !empty($postData['fmg_browse_edit_value'])) {
+        $edit_value = $postData['fmg_browse_edit_value'];
+    }
+
+    $update_result = fms_set_field($layout_name_url, $edit_id, $edit_name, $edit_value);
+
+    echo $update_result;
+    exit();
+}
 
 fms_refresh_auth_key(FMG_DB_HOST, FMG_DB_NAME, FMG_DB_USER, FMG_DB_PASSWORD);
 $layout_list = fms_get_layout_list();
@@ -304,6 +333,36 @@ block_form_close();
     </div>
 </div>
 
+<div id="fmg_browse_field_overlay" class="fmg_browse_field_backdrop">
+    <div id="fmg_browse_modal" class="fmg_browse_field_content">
+        <div class="fmg_browse_field_header">
+            <h2 class="fmg_browse_field_title"><?php echo txt("browse_nav_options_field"); ?></h2>
+            <button id="fmg_browse_close_field_button_header" class="fmg_browse_field_close_button"
+                onclick="fmg_browse_closeField()">&times;</button>
+        </div>
+        <div class="fmg_browse_field_body">
+            <?php
+
+            block_hidden_field([
+                "id" => "fmg_browse_edit_id",
+                "name" => "fmg_browse_edit_id"
+            ]);
+            block_hidden_field([
+                "id" => "fmg_browse_edit_name",
+                "name" => "fmg_browse_edit_name"
+            ]);
+
+            block_textarea(['name' => 'fmg_browse_edit_value']);
+
+            ?>
+        </div>
+        <div class="fmg_browse_field_footer">
+            <button id="fmg_browse_submit_field_button" class="fmg_browse_field_submit_button"
+                onclick="fmg_browse_fieldSubmit()"><?php echo txt("update"); ?></button>
+        </div>
+    </div>
+</div>
+
 <script>
     const msg_waiting = '<?php echo "<strong>" . txt("browse_msg_waiting") . "</strong>"; ?>';
     const msg_fail = '<?php echo "<strong>" . txt("browse_msg_failed") . "</strong>"; ?>';
@@ -317,6 +376,9 @@ block_form_close();
     const msg_nav_nodata = '<?php echo txt("msg_nav_nodata"); ?>';
 
     const msg_nav_filter = '<?php echo txt("msg_nav_filter"); ?>';
+
+    const msg_edit_success = '<?php echo txt("fmg_browse_edit_success"); ?>';
+    const msg_edit_fail = '<?php echo txt("fmg_browse_edit_fail"); ?>';
 </script>
 
 <?php

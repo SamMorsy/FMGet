@@ -7,6 +7,13 @@ var fmg_browse_filterOverlay = document.getElementById('fmg_browse_filter_overla
 var fmg_browse_closeFilterButtonHeader = document.getElementById('fmg_browse_close_filter_button_header');
 var fmg_browse_submitFilterButton = document.getElementById('fmg_browse_submit_filter_button');
 
+var fmg_browse_fieldOverlay = document.getElementById('fmg_browse_field_overlay');
+var fmg_browse_closeFieldButtonHeader = document.getElementById('fmg_browse_close_field_button_header');
+var fmg_browse_submitFieldButton = document.getElementById('fmg_browse_submit_field_button');
+var fmg_browse_field_id = document.getElementById('fmg_browse_edit_id');
+var fmg_browse_field_name = document.getElementById('fmg_browse_edit_name');
+var fmg_browse_field_value = document.getElementById('input_fmg_browse_edit_value');
+
 /**
  * @function fmg_browse_openFilter
  * @description Displays the modal dialog and its backdrop.
@@ -36,6 +43,62 @@ function fmg_browse_filterSubmit() {
     fmg_browse_closeFilter(); // Closes modal on submit for now
 
     fmg_changeBrowserState('refresh');
+}
+
+/**
+ * @function fmg_browse_closeField
+ * @description Hides the modal dialog and its backdrop.
+ */
+function fmg_browse_closeField() {
+    if (fmg_browse_fieldOverlay) {
+        fmg_browse_fieldOverlay.classList.remove('fmg_browse_field_visible');
+    }
+}
+
+/**
+ * @function fmg_browse_fieldSubmit
+ * @description Handles the submit button click. Currently logs a message and closes the modal.
+ */
+async function fmg_browse_fieldSubmit() {
+    console.log('FMG Browse: Submit button clicked');
+    fmg_browse_closeField(); // Closes modal on submit for now
+
+    const layout = document.getElementById('input_fmg_browse_layout')?.value;
+
+    // URLs for the POST request
+    const updateUrl = 'admin/browser.php?action=update_field';
+    // We'll use FormData to easily send the data as a POST request.
+    const formData = new FormData();
+    formData.append('fmg_browse_edit_layout', layout);
+    formData.append('fmg_browse_edit_id', fmg_browse_field_id.value);
+    formData.append('fmg_browse_edit_name', fmg_browse_field_name.value);
+    formData.append('fmg_browse_edit_value', fmg_browse_field_value.value);
+
+    try {
+        // Send POST request to update the field
+        console.log('Sending request to:', updateUrl);
+        const responseUpdate = await fetch(updateUrl, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (responseUpdate.ok) {
+            const responseText = await responseUpdate.text();
+            // If successful, call fmg_changeBrowserState
+            if (typeof fmg_changeBrowserState === 'function') {
+                fmg_showMessage(msg_edit_success, "success");
+                fmg_changeBrowserState('refresh');
+            }
+        } else {
+            //console.error('Update request failed:', responseUpdate.status, responseUpdate.statusText);
+            fmg_showMessage(msg_edit_fail, "danger");
+        }
+
+    } catch (error) {
+        //console.error('Error during update request:', error);
+        fmg_showMessage(msg_edit_fail, "danger");
+    }
+
 }
 
 /**
@@ -174,12 +237,20 @@ function fmg_refreshBrowserTable(jsonString) {
         // Create table body rows
         dataArray.forEach(obj => {
             const row = tableBody.insertRow();
+            row.setAttribute('data-id', obj["recordId"]);
+
             headers.forEach(header => {
                 const cell = row.insertCell();
                 const cellValue = obj["fieldData"][header];
 
                 // Handle cases where the value might be null or undefined
                 cell.textContent = cellValue !== null && cellValue !== undefined ? cellValue : '';
+
+                // Add click event listener to execute the script with parameters
+                cell.addEventListener('dblclick', function (event) {
+                    const rowId = row.getAttribute('data-id');
+                    fmg_browse_editField(event, header, rowId);
+                });
             });
         });
     } catch (error) {
@@ -190,6 +261,7 @@ function fmg_refreshBrowserTable(jsonString) {
         cell.textContent = "";
     }
 }
+
 // Assign keydown handler to the document
 // Using document.onkeydown can overwrite other existing onkeydown handlers.
 var fmg_browse_previousOnKeyDown = document.onkeydown;
@@ -331,4 +403,27 @@ async function fmg_changeBrowserState(changeType) {
         //console.error('Error during update request:', error);
         browserNavDiv.innerHTML = msg_fail;
     }
+}
+
+/**
+ * Open and prepare the modal for editing a field.
+ * @description Displays the modal dialog and its backdrop.
+ * @param {JSON} jsonString - The JSon array containing the records data.
+ * @returns {void}
+ */
+
+// 
+function fmg_browse_editField(event, fieldName, recordId) {
+    var clickedCell = event.currentTarget || event.target;
+    var cellText = clickedCell.innerText;
+
+    // Open and prepare the modal here
+    console.log(fieldName + " and the id is: " + recordId);
+    if (fmg_browse_fieldOverlay) {
+        fmg_browse_fieldOverlay.classList.add('fmg_browse_field_visible');
+    }
+    fmg_browse_field_id.value = recordId;
+    fmg_browse_field_name.value = fieldName;
+    fmg_browse_field_value.value = cellText;
+
 }

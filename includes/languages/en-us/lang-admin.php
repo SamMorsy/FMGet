@@ -122,7 +122,7 @@ return [
     "browse_msg_waiting" => "Loading the data, Please wait.",
     "browse_msg_failed" => "Faild to load the data, please try again.",
 
-    "msg_nav_settings" => "Sort Records",
+    "msg_nav_settings" => "Sort",
 
     "msg_nav_refresh" => "Refresh",
 
@@ -138,8 +138,13 @@ return [
     "browse_sort_type_ascend" => "Ascend",
     "browse_sort_type_descend" => "Descend",
 
-    "msg_nav_filter" => "Filter Records",
+    "msg_nav_filter" => "Filter",
 
     "browse_search_field_placeholder" => "Field name",
     "browse_search_value_placeholder" => "Query",
+
+    "browse_nav_options_field" => "Edit field",
+
+    "fmg_browse_edit_success" => "The field has been updated!",
+    "fmg_browse_edit_fail" => "Failed to update the file",
 ];

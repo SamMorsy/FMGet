@@ -781,3 +781,75 @@ function fms_escapeEncodeToJson($data)
 
     return $jsonOutput;
 }
+
+
+/**
+ * Update a single field in the FM database 
+ *
+ * @param string $records_layout    The layout
+ * @param string $records_layout    The field name
+ * @param string $records_layout    The field value
+ * @param int $records_limit        The record id
+ * @return string|array             Returns layout names array or an error code.
+ */
+function fms_set_field($records_layout, $edit_id = "", $edit_name = "", $edit_value = "")
+{
+    $authUrl = "https://" . FMG_DB_HOST . "/fmi/data/vLatest/databases/" . FMG_DB_NAME . "/layouts/" . $records_layout . "/records/" . rawurlencode($edit_id);
+
+    // Prepare payload
+    $payload = json_encode([
+        'fieldData' => [
+            $edit_name => $edit_value
+        ]
+    ]);
+
+    // echo json_encode($payload);
+    // exit();
+
+    // Init cURL
+    $ch = curl_init($authUrl);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Authorization: Bearer ' . $_SESSION['fmauth'],
+        'Content-Length: ' . strlen($payload)
+    ]);
+
+
+    $response = curl_exec($ch);
+
+    // echo $response;
+    // exit();
+
+    // Check for cURL errors
+    if (curl_errno($ch)) {
+        curl_close($ch);
+        return "error1"; // Server unreachable or request failed
+    }
+
+    curl_close($ch);
+
+    // Decode JSON response
+    $authData = json_decode($response, true);
+
+    // Handle JSON parsing errors
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return "error1"; // Invalid JSON response
+    }
+
+    // Validate response structure
+    if (!isset($authData['messages'][0]['message'])) {
+        return "error1"; // Unexpected response format
+    }
+
+    $responseFlag = $authData['messages'][0]['message'];
+
+    // Validate response structure
+    if ($responseFlag !== "OK") {
+        return "error2"; // Unexpected response Code
+    }
+
+    return "OK";
+}
