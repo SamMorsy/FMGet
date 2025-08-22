@@ -379,6 +379,15 @@ block_form_close();
 
     const msg_edit_success = '<?php echo txt("fmg_browse_edit_success"); ?>';
     const msg_edit_fail = '<?php echo txt("fmg_browse_edit_fail"); ?>';
+
+    const msg_actions_header = '<?php echo txt("fmg_browse_actions_header"); ?>';
+
+    const msg_delete_success = '<?php echo txt("fmg_browse_delete_success"); ?>';
+    const msg_delete_fail = '<?php echo txt("fmg_browse_delete_fail"); ?>';
+    const msg_delete_title = '<?php echo txt("browse_nav_delete_title"); ?>';
+    const msg_delete_button = '<?php echo txt("browse_nav_delete_button"); ?>';
+    const msg_delete_msg = '<?php echo txt("browse_msg_delete"); ?>';
+
 </script>
 
 <?php

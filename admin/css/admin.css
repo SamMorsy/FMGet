@@ -249,7 +249,7 @@ table.logs-table a.details-link:hover {
 .browser-container td {
     min-width: 120px;
     max-width: 300px;
-    padding: 10px 12px;
+    padding: 0px 5px;
     border: 1px solid #ddd;
     text-align: left;
     white-space: nowrap;

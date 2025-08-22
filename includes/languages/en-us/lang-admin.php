@@ -147,4 +147,11 @@ return [
 
     "fmg_browse_edit_success" => "The field has been updated!",
     "fmg_browse_edit_fail" => "Failed to update the file",
+
+    "fmg_browse_actions_header" => "Actions",
+    "fmg_browse_delete_success" => "The selected record has been deleted!",
+    "fmg_browse_delete_fail" => "Failed to delete the selected record",
+    "browse_nav_delete_title" => "Delete record",
+    "browse_nav_delete_button" => "Delete",
+    "browse_msg_delete" => "Permenately remove this record from the database?",
 ];

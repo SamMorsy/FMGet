@@ -212,6 +212,11 @@ function fmg_refreshBrowserTable(jsonString) {
             optionsContainer.innerHTML = ''; // Clear existing options
         }
 
+        // Create the row actions header
+        const headerActionsCell = document.createElement('th');
+        headerActionsCell.textContent = msg_actions_header;
+        tableHeader.appendChild(headerActionsCell);
+
         // Create table header row and populate options
         headers.forEach(headerText => {
             // Create and append <th> to the table header
@@ -219,7 +224,7 @@ function fmg_refreshBrowserTable(jsonString) {
             headerCell.textContent = headerText;
             tableHeader.appendChild(headerCell);
 
-            // Also create and append a <div> for each headerText into the options container
+            // Also create and append a <div> for each headerText into the sort options container
             if (optionsContainer) {
                 const optionDiv = document.createElement('div');
                 optionDiv.textContent = headerText;
@@ -238,6 +243,10 @@ function fmg_refreshBrowserTable(jsonString) {
         dataArray.forEach(obj => {
             const row = tableBody.insertRow();
             row.setAttribute('data-id', obj["recordId"]);
+
+            // Add row options cell
+            const cellOptions = row.insertCell();
+            cellOptions.innerHTML = "<a class=\"fmg-ui-link\">" + msg_delete_button + "</a>";
 
             headers.forEach(header => {
                 const cell = row.insertCell();
