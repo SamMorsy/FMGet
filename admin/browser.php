@@ -122,6 +122,30 @@ if (isset($_GET["action"]) && $_GET["action"] == "update_field" && isset($_SESSI
     exit();
 }
 
+// Update table body and header
+if (isset($_GET["action"]) && $_GET["action"] == "delete_record" && isset($_SESSION['post_data'])) {
+    fms_refresh_auth_key(FMG_DB_HOST, FMG_DB_NAME, FMG_DB_USER, FMG_DB_PASSWORD);
+
+    // Retrieve stored data after redirection
+    $postData = $_SESSION['post_data'];
+
+    if (!isset($postData['fmg_browse_edit_layout']) || empty($postData['fmg_browse_edit_layout'])) {
+        $form_errors .= txt("error_fmgusername_required") . "<br>";
+    }
+
+    $selected_layout = $postData['fmg_browse_delete_layout'];
+    $layout_name_url = rawurlencode($selected_layout);
+
+    if (isset($postData['fmg_browse_delete_id']) && !empty($postData['fmg_browse_delete_id'])) {
+        $delete_id = $postData['fmg_browse_delete_id'];
+    }
+
+    $update_result = fms_delete_record($layout_name_url, $delete_id);
+
+    echo $update_result;
+    exit();
+}
+
 fms_refresh_auth_key(FMG_DB_HOST, FMG_DB_NAME, FMG_DB_USER, FMG_DB_PASSWORD);
 $layout_list = fms_get_layout_list();
 
@@ -359,6 +383,31 @@ block_form_close();
         <div class="fmg_browse_field_footer">
             <button id="fmg_browse_submit_field_button" class="fmg_browse_field_submit_button"
                 onclick="fmg_browse_fieldSubmit()"><?php echo txt("update"); ?></button>
+        </div>
+    </div>
+</div>
+
+<div id="fmg_browse_delete_overlay" class="fmg_browse_delete_backdrop">
+    <div id="fmg_browse_modal" class="fmg_browse_delete_content">
+        <div class="fmg_browse_delete_header">
+            <h2 class="fmg_browse_delete_title"><?php echo txt("browse_nav_delete_title"); ?></h2>
+            <button id="fmg_browse_close_delete_button_header" class="fmg_browse_delete_close_button"
+                onclick="fmg_browse_closeDelete()">&times;</button>
+        </div>
+        <div class="fmg_browse_delete_body">
+            <?php
+
+            block_hidden_field([
+                "id" => "fmg_browse_delete_id",
+                "name" => "fmg_browse_delete_id"
+            ]);
+            echo txt("browse_msg_delete");
+
+            ?>
+        </div>
+        <div class="fmg_browse_delete_footer">
+            <button id="fmg_browse_submit_delete_button" class="fmg_browse_delete_submit_button"
+                onclick="fmg_browse_deleteSubmit()"><?php echo txt("browse_nav_delete_button"); ?></button>
         </div>
     </div>
 </div>

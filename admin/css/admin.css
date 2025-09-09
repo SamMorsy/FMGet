@@ -598,3 +598,107 @@ table.logs-table a.details-link:hover {
     display: flex;
     /* Use flex for centering content */
 }
+
+
+
+
+
+
+
+.fmg_browse_delete_backdrop {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Dimmed background */
+    z-index: 1000;
+    /* Ensure it's above other content */
+    justify-content: center;
+    align-items: center;
+}
+
+.fmg_browse_delete_content {
+    background-color: white;
+    width: 500px;
+    height: 200px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    /* For absolute positioning of close button */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.fmg_browse_delete_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eeeeee;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.fmg_browse_delete_title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.fmg_browse_delete_close_button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #888;
+}
+
+.fmg_browse_delete_close_button:hover {
+    color: #333;
+}
+
+.fmg_browse_delete_body {
+    flex-grow: 1;
+    /* Allows body to take available space */
+    /* Add content here if needed */
+    color: #555;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-y: auto;
+    /* In case content exceeds modal height */
+}
+
+.fmg_browse_delete_footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 15px;
+    border-top: 1px solid #eeeeee;
+    margin-top: auto;
+    /* Pushes footer to the bottom */
+}
+
+.fmg_browse_delete_submit_button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #005d76;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.fmg_browse_delete_submit_button:hover {
+    background-color: #014457;
+}
+
+/* Class to make backdrop and modal visible */
+.fmg_browse_delete_visible {
+    display: flex;
+    /* Use flex for centering content */
+}

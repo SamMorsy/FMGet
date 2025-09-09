@@ -14,6 +14,10 @@ var fmg_browse_field_id = document.getElementById('fmg_browse_edit_id');
 var fmg_browse_field_name = document.getElementById('fmg_browse_edit_name');
 var fmg_browse_field_value = document.getElementById('input_fmg_browse_edit_value');
 
+var fmg_browse_deleteOverlay = document.getElementById('fmg_browse_delete_overlay');
+var fmg_browse_closeDeleteButtonHeader = document.getElementById('fmg_browse_close_delete_button_header');
+var fmg_browse_submitDeleteButton = document.getElementById('fmg_browse_submit_delete_button');
+var fmg_browse_delete_id = document.getElementById('fmg_browse_delete_id');
 /**
  * @function fmg_browse_openFilter
  * @description Displays the modal dialog and its backdrop.
@@ -246,7 +250,7 @@ function fmg_refreshBrowserTable(jsonString) {
 
             // Add row options cell
             const cellOptions = row.insertCell();
-            cellOptions.innerHTML = "<a class=\"fmg-ui-link\">" + msg_delete_button + "</a>";
+            cellOptions.innerHTML = "<a onclick=\"fmg_browse_deleteRecord(" + obj["recordId"] + ")\" class=\"fmg-ui-link\">" + msg_delete_button + "</a>";
 
             headers.forEach(header => {
                 const cell = row.insertCell();
@@ -434,5 +438,75 @@ function fmg_browse_editField(event, fieldName, recordId) {
     fmg_browse_field_id.value = recordId;
     fmg_browse_field_name.value = fieldName;
     fmg_browse_field_value.value = cellText;
+}
+
+/**
+ * Open and prepare the modal for deleting a record.
+ * @description Displays the modal dialog and its backdrop.
+ * @param {JSON} jsonString - The JSon array containing the records data.
+ * @returns {void}
+ */
+
+// 
+function fmg_browse_deleteRecord(recordId) {
+    // Open and prepare the modal here
+    console.log("Delete the id: " + recordId);
+    if (fmg_browse_fieldOverlay) {
+        fmg_browse_deleteOverlay.classList.add('fmg_browse_delete_visible');
+    }
+    fmg_browse_delete_id.value = recordId;
+}
+
+/**
+ * @function fmg_browse_closeDelete
+ * @description Hides the modal dialog and its backdrop.
+ */
+function fmg_browse_closeDelete() {
+    if (fmg_browse_deleteOverlay) {
+        fmg_browse_deleteOverlay.classList.remove('fmg_browse_delete_visible');
+    }
+}
+
+/**
+ * @function fmg_browse_deleteSubmit
+ * @description Handles the submit button click. Currently logs a message and closes the modal.
+ */
+async function fmg_browse_deleteSubmit() {
+    console.log('FMG Browse: Submit button for delete clicked');
+    fmg_browse_closeDelete(); // Closes modal on submit for now
+
+    const layout = document.getElementById('input_fmg_browse_layout')?.value;
+
+    // URLs for the POST request
+    const updateUrl = 'admin/browser.php?action=delete_record';
+    // We'll use FormData to easily send the data as a POST request.
+    const formData = new FormData();
+    formData.append('fmg_browse_delete_layout', layout);
+    formData.append('fmg_browse_delete_id', fmg_browse_delete_id.value);
+
+    try {
+        // Send POST request to update the field
+        console.log('Sending request to:', updateUrl);
+        const responseUpdate = await fetch(updateUrl, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (responseUpdate.ok) {
+            const responseText = await responseUpdate.text();
+            // If successful, call fmg_changeBrowserState
+            if (typeof fmg_changeBrowserState === 'function') {
+                fmg_showMessage(msg_delete_success, "success");
+                fmg_changeBrowserState('refresh');
+            }
+        } else {
+            //console.error('Update request failed:', responseUpdate.status, responseUpdate.statusText);
+            fmg_showMessage(msg_delete_fail, "danger");
+        }
+
+    } catch (error) {
+        //console.error('Error during update request:', error);
+        fmg_showMessage(msg_delete_fail, "danger");
+    }
 
 }
