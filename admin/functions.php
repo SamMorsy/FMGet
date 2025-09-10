@@ -614,22 +614,34 @@ function fms_get_records_list($records_layout, $records_offset = 1, $records_lim
     if (!empty($search_field)) {
         $authUrl = "https://" . FMG_DB_HOST . "/fmi/data/vLatest/databases/" . FMG_DB_NAME . "/layouts/" . $records_layout . "/_find";
 
-        $data = [
-            'query' => [
-                [
-                    $search_field => $search_value
-                ]
-            ],
-            'sort' => [
-                [
-                    'fieldName' => $sort_field,
-                    'sortOrder' => strtolower($sort_type)
-                ]
-            ],
-            'offset' => $records_offset,
-            'limit' => $records_limit
-        ];
-
+        //Sorting query
+        if (!empty($sort_field)) {
+            $data = [
+                'query' => [
+                    [
+                        $search_field => $search_value
+                    ]
+                ],
+                'sort' => [
+                    [
+                        'fieldName' => $sort_field,
+                        'sortOrder' => strtolower($sort_type)
+                    ]
+                ],
+                'offset' => $records_offset,
+                'limit' => $records_limit
+            ];
+        } else {
+            $data = [
+                'query' => [
+                    [
+                        $search_field => $search_value
+                    ]
+                ],
+                'offset' => $records_offset,
+                'limit' => $records_limit
+            ];
+        }
 
         // echo json_encode($data);
         // exit();
