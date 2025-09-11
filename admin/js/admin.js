@@ -1,4 +1,8 @@
 // Ensure all JS variables and functions start with fmg_browse_
+// When an id is assigned to an HTML element it automatically create a JS object
+// But i am create these here just to avoid any guessing
+// Maybe will rewrite it later
+
 var fmg_browse_modalOverlay = document.getElementById('fmg_browse_modal_overlay');
 var fmg_browse_closeModalButtonHeader = document.getElementById('fmg_browse_close_modal_button_header');
 var fmg_browse_submitModalButton = document.getElementById('fmg_browse_submit_modal_button');
@@ -13,6 +17,10 @@ var fmg_browse_submitFieldButton = document.getElementById('fmg_browse_submit_fi
 var fmg_browse_field_id = document.getElementById('fmg_browse_edit_id');
 var fmg_browse_field_name = document.getElementById('fmg_browse_edit_name');
 var fmg_browse_field_value = document.getElementById('input_fmg_browse_edit_value');
+var fmg_browse_field_disabled = document.getElementById('fmg_browse_field_disabled');
+var fmg_browse_field_related_upload = document.getElementById('fmg_browse_field_related_upload');
+var fmg_browse_uploadFieldButton = document.getElementById('fmg_browse_submit_field_upload');
+var fmg_browse_downloadFieldButton = document.getElementById('fmg_browse_submit_field_download');
 
 var fmg_browse_deleteOverlay = document.getElementById('fmg_browse_delete_overlay');
 var fmg_browse_closeDeleteButtonHeader = document.getElementById('fmg_browse_close_delete_button_header');
@@ -195,6 +203,7 @@ function fmg_refreshBrowserTable(jsonString) {
     try {
         const fullArray = JSON.parse(jsonString);
         const dataArray = fullArray['response']['data'];
+        const schemeArray = fullArray['response']['scheme'];
         if (!Array.isArray(dataArray) || dataArray.length === 0) {
             console.error("Parsed JSON is not an array or is empty.");
             // Optionally display a message to the user in the table or a separate element
@@ -255,14 +264,24 @@ function fmg_refreshBrowserTable(jsonString) {
             headers.forEach(header => {
                 const cell = row.insertCell();
                 const cellValue = obj["fieldData"][header];
+                const cellType = schemeArray[header]["type"]; // To decide if it can be updated or not
+                const cellCategory = schemeArray[header]["result"]; // How the data will be viewed by the user
 
-                // Handle cases where the value might be null or undefined
-                cell.textContent = cellValue !== null && cellValue !== undefined ? cellValue : '';
+                // Handle cases where the value might be null or undefined or a container
+                if (cellCategory == "container") {
+                    if (cellValue !== "") {
+                        cell.textContent = "[ File ]";
+                    } else {
+                        cell.textContent = "";
+                    }
+                } else {
+                    cell.textContent = cellValue !== null && cellValue !== undefined ? cellValue : '';
+                }
 
-                // Add click event listener to execute the script with parameters
+                // Add click event listener to execute the edit / view script
                 cell.addEventListener('dblclick', function (event) {
                     const rowId = row.getAttribute('data-id');
-                    fmg_browse_editField(event, header, rowId);
+                    fmg_browse_editField(event, header, rowId, cellType, cellCategory);
                 });
             });
         });
@@ -426,18 +445,52 @@ async function fmg_changeBrowserState(changeType) {
  */
 
 // 
-function fmg_browse_editField(event, fieldName, recordId) {
+function fmg_browse_editField(event, fieldName, recordId, cellType, cellCategory) {
     var clickedCell = event.currentTarget || event.target;
     var cellText = clickedCell.innerText;
 
     // Open and prepare the modal here
     console.log(fieldName + " and the id is: " + recordId);
+    console.log("Cell type/category: " + cellType + "/" + cellCategory)
+
     if (fmg_browse_fieldOverlay) {
         fmg_browse_fieldOverlay.classList.add('fmg_browse_field_visible');
     }
     fmg_browse_field_id.value = recordId;
     fmg_browse_field_name.value = fieldName;
     fmg_browse_field_value.value = cellText;
+
+    fmg_browse_field_related_upload.classList.add('fmg_browse_field_hide');
+    fmg_browse_field_disabled.classList.add('fmg_browse_field_hide');
+    fmg_browse_submitFieldButton.classList.remove('fmg_browse_field_hide');
+    fmg_browse_downloadFieldButton.classList.add('fmg_browse_field_hide');
+    fmg_browse_uploadFieldButton.classList.add('fmg_browse_field_hide');
+
+    // Uneditable field
+    if (cellType !== "normal") {
+        fmg_browse_submitFieldButton.classList.add('fmg_browse_field_hide');
+        fmg_browse_field_disabled.classList.remove('fmg_browse_field_hide');
+    }
+
+    // Container field
+    if (cellCategory == "container") {
+        fmg_browse_submitFieldButton.classList.add('fmg_browse_field_hide');
+        fmg_browse_uploadFieldButton.classList.remove('fmg_browse_field_hide');
+        if (cellType !== "normal") {
+            fmg_browse_uploadFieldButton.classList.add('fmg_browse_field_hide');
+            fmg_browse_field_disabled.classList.remove('fmg_browse_field_hide');
+        }
+        if (fieldName.includes("::")) {
+            fmg_browse_uploadFieldButton.classList.add('fmg_browse_field_hide');
+            fmg_browse_field_related_upload.classList.remove('fmg_browse_field_hide');
+        }
+        if (cellText !== "") {
+            fmg_browse_field_value.value = msg_edit_file_contain;
+            fmg_browse_downloadFieldButton.classList.remove('fmg_browse_field_hide');
+        } else {
+            fmg_browse_field_value.value = msg_edit_file_empty;
+        }
+    }
 }
 
 /**
@@ -446,8 +499,6 @@ function fmg_browse_editField(event, fieldName, recordId) {
  * @param {JSON} jsonString - The JSon array containing the records data.
  * @returns {void}
  */
-
-// 
 function fmg_browse_deleteRecord(recordId) {
     // Open and prepare the modal here
     console.log("Delete the id: " + recordId);
@@ -507,6 +558,57 @@ async function fmg_browse_deleteSubmit() {
     } catch (error) {
         //console.error('Error during update request:', error);
         fmg_showMessage(msg_delete_fail, "danger");
+    }
+
+}
+
+
+/**
+ * @function fmg_browse_fieldDownload
+ * @description Handles the download button click. Currently logs a message and closes the modal.
+ */
+async function fmg_browse_fieldDownload() {
+    console.log('FMG Browse: Download button clicked');
+    fmg_browse_downloadFieldButton.classList.add('fmg_browse_field_hide');
+    fmg_browse_uploadFieldButton.classList.add('fmg_browse_field_hide');
+    fmg_browse_field_value.value = msg_download_wait;
+
+    const layout = document.getElementById('input_fmg_browse_layout')?.value;
+
+    // URLs for the POST request
+    const updateUrl = 'admin/browser.php?action=download_field';
+    // We'll use FormData to easily send the data as a POST request.
+    const formData = new FormData();
+    formData.append('fmg_browse_edit_layout', layout);
+    formData.append('fmg_browse_edit_id', fmg_browse_field_id.value);
+    formData.append('fmg_browse_edit_name', fmg_browse_field_name.value);
+
+    try {
+        // Send POST request to update the field
+        console.log('Sending request to:', updateUrl);
+        const responseUpdate = await fetch(updateUrl, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (responseUpdate.ok) {
+            const responseText = await responseUpdate.text();
+            // If successful, call fmg_changeBrowserState
+            fmg_browse_closeField(); // Closes modal on submit for now
+            if (typeof fmg_changeBrowserState === 'function') {
+                fmg_showMessage(msg_download_success, "success");
+                //fmg_changeBrowserState('refresh'); // TEMPORARY PAUSED FOR TESTING
+            }
+        } else {
+            //console.error('Update request failed:', responseUpdate.status, responseUpdate.statusText);
+            fmg_browse_closeField(); // Closes modal on submit for now
+            fmg_showMessage(msg_download_fail, "danger");
+        }
+
+    } catch (error) {
+        //console.error('Error during update request:', error);
+        fmg_browse_closeField(); // Closes modal on submit for now
+        fmg_showMessage(msg_download_fail, "danger");
     }
 
 }

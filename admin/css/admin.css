@@ -599,6 +599,10 @@ table.logs-table a.details-link:hover {
     /* Use flex for centering content */
 }
 
+/* Class to mhide unneeded options based on the field type or category */
+.fmg_browse_field_hide{
+    display: none;
+}
 
 
 

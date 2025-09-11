@@ -146,6 +146,34 @@ if (isset($_GET["action"]) && $_GET["action"] == "delete_record" && isset($_SESS
     exit();
 }
 
+// Update table body and header
+if (isset($_GET["action"]) && $_GET["action"] == "download_field" && isset($_SESSION['post_data'])) {
+    fms_refresh_auth_key(FMG_DB_HOST, FMG_DB_NAME, FMG_DB_USER, FMG_DB_PASSWORD);
+
+    // Retrieve stored data after redirection
+    $postData = $_SESSION['post_data'];
+
+    if (!isset($postData['fmg_browse_edit_layout']) || empty($postData['fmg_browse_edit_layout'])) {
+        $form_errors .= txt("error_fmgusername_required") . "<br>";
+    }
+
+    $selected_layout = $postData['fmg_browse_edit_layout'];
+    $layout_name_url = rawurlencode($selected_layout);
+
+    if (isset($postData['fmg_browse_edit_id']) && !empty($postData['fmg_browse_edit_id'])) {
+        $edit_id = $postData['fmg_browse_edit_id'];
+    }
+    if (isset($postData['fmg_browse_edit_name']) && !empty($postData['fmg_browse_edit_name'])) {
+        $edit_name = $postData['fmg_browse_edit_name'];
+    }
+
+    //$update_result = fms_set_field($layout_name_url, $edit_id, $edit_name, $edit_value);
+    // In this part renew the link to the container and send back a json with the full needed details to excute a direct download form FMS
+
+    //echo $update_result;
+    exit();
+}
+
 fms_refresh_auth_key(FMG_DB_HOST, FMG_DB_NAME, FMG_DB_USER, FMG_DB_PASSWORD);
 $layout_list = fms_get_layout_list();
 
@@ -379,10 +407,18 @@ block_form_close();
             block_textarea(['name' => 'fmg_browse_edit_value']);
 
             ?>
+            <div id="fmg_browse_field_disabled" class="fmg-ui-note default text-left fmg_browse_field_hide">
+                <?php echo txt("fmg_browse_edit_disabled"); ?></div>
+            <div id="fmg_browse_field_related_upload" class="fmg-ui-note warning text-left fmg_browse_field_hide">
+                <?php echo txt("fmg_browse_edit_related_upload"); ?></div>
         </div>
         <div class="fmg_browse_field_footer">
             <button id="fmg_browse_submit_field_button" class="fmg_browse_field_submit_button"
                 onclick="fmg_browse_fieldSubmit()"><?php echo txt("update"); ?></button>
+            <button id="fmg_browse_submit_field_upload" class="fmg_browse_field_submit_button"
+                onclick="fmg_browse_fieldSubmit()"><?php echo txt("upload"); ?></button>
+            <button id="fmg_browse_submit_field_download" class="fmg_browse_field_submit_button"
+                onclick="fmg_browse_fieldDownload()"><?php echo txt("download"); ?></button>
         </div>
     </div>
 </div>
@@ -428,6 +464,13 @@ block_form_close();
 
     const msg_edit_success = '<?php echo txt("fmg_browse_edit_success"); ?>';
     const msg_edit_fail = '<?php echo txt("fmg_browse_edit_fail"); ?>';
+
+    const msg_edit_file_empty = '<?php echo txt("fmg_browse_edit_file_empty"); ?>';
+    const msg_edit_file_contain = '<?php echo txt("fmg_browse_edit_file_contain"); ?>';
+
+    const msg_download_success = '<?php echo txt("fmg_browse_download_success"); ?>';
+    const msg_download_fail = '<?php echo txt("fmg_browse_download_fail"); ?>';
+    const msg_download_wait = '<?php echo txt("fmg_browse_download_wait"); ?>';
 
     const msg_actions_header = '<?php echo txt("fmg_browse_actions_header"); ?>';
 

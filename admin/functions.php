@@ -723,6 +723,55 @@ function fms_get_records_list($records_layout, $records_offset = 1, $records_lim
         return "error2"; // Unexpected response format
     }
 
+    // Get layout scheme
+    $authUrl = "https://" . FMG_DB_HOST . "/fmi/data/vLatest/databases/" . FMG_DB_NAME . "/layouts/" . $records_layout;
+
+    $authHeaders = [
+        "Authorization: Bearer " . $_SESSION['fmauth'],
+        "Content-Type: application/json"
+    ];
+
+
+    $ch = curl_init($authUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $authHeaders);
+    curl_setopt($ch, CURLOPT_HTTPGET, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Timeout after 10 seconds
+
+    $responseScheme = curl_exec($ch);
+
+    // echo $response;
+    // exit();
+
+    // Check for cURL errors
+    if (curl_errno($ch)) {
+        curl_close($ch);
+        return "error1"; // Server unreachable or request failed
+    }
+
+    curl_close($ch);
+
+    // Decode JSON response
+    $rawScheme = json_decode($responseScheme, true);
+
+    // Keys you want to keep
+    $allowedKeys = ['name', 'type', 'result', 'global'];
+
+    // Filter each item in the array
+    $indexedScheme = [];
+    foreach ($rawScheme['response']['fieldMetaData'] as $item) {
+        // keep only allowed keys
+        $filtered = array_intersect_key($item, array_flip($allowedKeys));
+
+        // use "name" as the index
+        $name = $filtered['name'];
+        unset($filtered['name']); // remove name from inside if you don’t want it duplicated
+
+        $indexedScheme[$name] = $filtered;
+    }
+
+    $authData['response']['scheme'] = $indexedScheme;
+
     return $authData;
 }
 
