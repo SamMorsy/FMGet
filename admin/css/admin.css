@@ -221,7 +221,6 @@ table.logs-table a.details-link:hover {
 }
 
 .browser-nav-right {
-    width: 300px;
     display: inline-flex;
     justify-content: space-between;
 }
@@ -296,6 +295,12 @@ table.logs-table a.details-link:hover {
     100% {
         transform: rotate(360deg);
     }
+}
+
+.browser-nav-item {
+    display: inline-flex;
+    align-items: center;
+    margin: 0px 5px;
 }
 
 .fmg_browse_modal_backdrop {

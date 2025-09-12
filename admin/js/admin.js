@@ -36,6 +36,7 @@ const fmg_browse_icon_file = `
     </svg>
   `;
 
+const fmg_browse_icon_delete = '<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#005d76"><path d="M312-144q-29.7 0-50.85-21.15Q240-186.3 240-216v-480h-48v-72h192v-48h192v48h192v72h-48v479.57Q720-186 698.85-165T648-144H312Zm336-552H312v480h336v-480ZM384-288h72v-336h-72v336Zm120 0h72v-336h-72v336ZM312-696v480-480Z"/></svg>'
 /**
  * @function fmg_browse_openFilter
  * @description Displays the modal dialog and its backdrop.
@@ -211,9 +212,8 @@ function fmg_refreshBrowserTable(jsonString) {
     tableBody.innerHTML = '';
 
     try {
-        const fullArray = JSON.parse(jsonString);
-        const dataArray = fullArray['response']['data'];
-        const schemeArray = fullArray['response']['scheme'];
+        const dataArray = jsonString['response']['data'];
+        const schemeArray = jsonString['response']['scheme'];
         if (!Array.isArray(dataArray) || dataArray.length === 0) {
             console.error("Parsed JSON is not an array or is empty.");
             // Optionally display a message to the user in the table or a separate element
@@ -269,7 +269,7 @@ function fmg_refreshBrowserTable(jsonString) {
 
             // Add row options cell
             const cellOptions = row.insertCell();
-            cellOptions.innerHTML = "<a onclick=\"fmg_browse_deleteRecord(" + obj["recordId"] + ")\" class=\"fmg-ui-link\">" + msg_delete_button + "</a>";
+            cellOptions.innerHTML = "<div  style=\" display: block; width: fit-content;\" onclick=\"fmg_browse_deleteRecord(" + obj["recordId"] + ")\" title=\"" + msg_delete_button + "\">" + fmg_browse_icon_delete + "</div>";
 
             headers.forEach(header => {
                 const cell = row.insertCell();
@@ -406,31 +406,47 @@ async function fmg_changeBrowserState(changeType) {
             const responseText = await responseUpdate.text();
             // If successful, call fmg_refreshBrowserTable
             if (typeof fmg_refreshBrowserTable === 'function') {
-                fmg_refreshBrowserTable(responseText);    // Construct the HTML string using template literals for clarity
+                const fullArray = JSON.parse(responseText);
+                fmg_refreshBrowserTable(fullArray);    // Construct the HTML string using template literals for clarity
+                // Preparing pagination
+                var previousArrouwHTML ="";
+                var nextArrouwHTML ="";
+                const rowsRetrned = fullArray['response']['dataInfo']["returnedCount"];
+                const rowsFound = fullArray['response']['dataInfo']["foundCount"];
+                if (parseInt(recordsOffset, 10) == 1) {
+                    previousArrouwHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="23px" viewBox="0 -960 960 960" width="23px" fill="#999999"><path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z"/></svg>`;
+                } else {
+                    previousArrouwHTML = `<svg target="_self" onclick="fmg_changeBrowserState('previous')" xmlns="http://www.w3.org/2000/svg" height="23px" viewBox="0 -960 960 960" width="23px" fill="#005d76"><path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z"/></svg>`;
+                }
+                if ((Math.floor(parseInt(recordsOffset, 10) + parseInt(rowsRetrned, 10) - 1)) == parseInt(rowsFound, 10)) {
+                    nextArrouwHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="23px" viewBox="0 -960 960 960" width="23px" fill="#999999"><path d="m321-80-71-71 329-329-329-329 71-71 400 400L321-80Z"/></svg>`;
+                } else {
+                    nextArrouwHTML = `<svg target="_self" onclick="fmg_changeBrowserState('next')" xmlns="http://www.w3.org/2000/svg" height="23px" viewBox="0 -960 960 960" width="23px" fill="#005d76"><path d="m321-80-71-71 329-329-329-329 71-71 400 400L321-80Z"/></svg>`;
+                }
                 const newHTML = `
                     <div class="browser-nav-left">
-                        <div class="browser-nav-item">
-                            <a target="_self" onclick="fmg_changeBrowserState('refresh')" class="fmg-ui-link">${msg_nav_refresh}</a>
+                        <div class="browser-nav-item" title="${msg_nav_refresh}">
+                            <svg  target="_self" onclick="fmg_changeBrowserState('refresh')" xmlns="http://www.w3.org/2000/svg" height="23px" viewBox="0 -960 960 960" width="23px" fill="#005d76"><path d="M480-192q-120 0-204-84t-84-204q0-120 84-204t204-84q65 0 120.5 27t95.5 72v-99h72v240H528v-72h131q-29-44-76-70t-103-26q-90 0-153 63t-63 153q0 90 63 153t153 63q84 0 144-55.5T693-456h74q-9 112-91 188t-196 76Z"/></svg>
+                        </div>
+                        <div class="browser-nav-item" title="${msg_nav_filter}">
+                            <svg target="_self" onclick="fmg_browse_openFilter()" xmlns="http://www.w3.org/2000/svg" height="23px" viewBox="0 -960 960 960" width="23px" fill="#005d76"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>
+                        </div>
+                        <div class="browser-nav-item" title="${msg_nav_settings}">
+                            <svg target="_self" onclick="fmg_browse_openModal()" xmlns="http://www.w3.org/2000/svg" height="23px" viewBox="0 -960 960 960" width="23px" fill="#005d76"><path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z"/></svg>
                         </div>
                         <div class="browser-nav-item" style="margin-left: 10px;">
                             [ ${msg_nav_title} ] ${layout}
                         </div>
                     </div>
-                    <div class="browser-nav-center">
-                        <a target="_self" onclick="fmg_browse_openFilter()" class="fmg-ui-link"> ${msg_nav_filter}</a>
-                    </div>
-                    <div class="browser-nav-center">
-                        <a target="_self" onclick="fmg_browse_openModal()" class="fmg-ui-link"> ${msg_nav_settings}</a>
-                    </div>
                     <div class="browser-nav-right">
                         <div class="browser-nav-item">
-                            <a target="_self" onclick="fmg_changeBrowserState('previous')" class="fmg-ui-link">&lt;&lt; ${msg_nav_previous}</a>
+                            ${parseInt(recordsOffset, 10)} - ${Math.floor(parseInt(recordsOffset, 10) + parseInt(rowsRetrned, 10) - 1)} [ ${parseInt(rowsFound, 10)} ]
                         </div>
-                        <div class="browser-nav-item">
-                            ${parseInt(recordsOffset, 10)} - ${Math.floor(parseInt(recordsOffset, 10) + parseInt(recordsLimit, 10) - 1)}
+                        <div class="browser-nav-item" title="${msg_nav_previous}">
+                            ${previousArrouwHTML}
                         </div>
-                        <div class="browser-nav-item">
-                            <a target="_self" onclick="fmg_changeBrowserState('next')" class="fmg-ui-link"> ${msg_nav_next} &gt;&gt;</a>
+                        <div class="browser-nav-item" title="${msg_nav_next}">
+                            ${nextArrouwHTML}
                         </div>
                     </div>
                     `;
