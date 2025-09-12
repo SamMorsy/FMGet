@@ -26,6 +26,16 @@ var fmg_browse_deleteOverlay = document.getElementById('fmg_browse_delete_overla
 var fmg_browse_closeDeleteButtonHeader = document.getElementById('fmg_browse_close_delete_button_header');
 var fmg_browse_submitDeleteButton = document.getElementById('fmg_browse_submit_delete_button');
 var fmg_browse_delete_id = document.getElementById('fmg_browse_delete_id');
+
+// SVG Icons
+const fmg_browse_icon_file = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#005d76">
+      <path d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 
+        23.5-56.5T240-880h360l200 200v520q0 33-23.5 
+        56.5T720-80H240Zm0-80h480v-480H560v-160H240v640Z" />
+    </svg>
+  `;
+
 /**
  * @function fmg_browse_openFilter
  * @description Displays the modal dialog and its backdrop.
@@ -270,7 +280,7 @@ function fmg_refreshBrowserTable(jsonString) {
                 // Handle cases where the value might be null or undefined or a container
                 if (cellCategory == "container") {
                     if (cellValue !== "") {
-                        cell.textContent = "[ File ]";
+                        cell.innerHTML = fmg_browse_icon_file;
                     } else {
                         cell.textContent = "";
                     }
@@ -484,7 +494,7 @@ function fmg_browse_editField(event, fieldName, recordId, cellType, cellCategory
             fmg_browse_uploadFieldButton.classList.add('fmg_browse_field_hide');
             fmg_browse_field_related_upload.classList.remove('fmg_browse_field_hide');
         }
-        if (cellText !== "") {
+        if (clickedCell.innerHTML !== "") {
             fmg_browse_field_value.value = msg_edit_file_contain;
             fmg_browse_downloadFieldButton.classList.remove('fmg_browse_field_hide');
         } else {

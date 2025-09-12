@@ -268,6 +268,13 @@ table.logs-table a.details-link:hover {
     background-color: #f9f9f9;
 }
 
+.browser-container tbody tr svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+    /* Fix row height issue */
+}
+
 .loader {
     border: 4px solid #f3f3f3;
     /* Light grey border */
@@ -600,7 +607,7 @@ table.logs-table a.details-link:hover {
 }
 
 /* Class to mhide unneeded options based on the field type or category */
-.fmg_browse_field_hide{
+.fmg_browse_field_hide {
     display: none;
 }
 
