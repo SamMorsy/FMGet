@@ -222,30 +222,6 @@ if ($layout_list == "error1" || $layout_list == "error2") {
         'type' => 'danger',
     ]);
     $layout_list = [];
-} else {
-    block_menufield([
-        'label' => txt('browse_layoutselect_placeholder'),
-        'text' => $selected_layout,
-        'id' => 'fmg_browse_layout',
-        'name' => 'fmg_browse_layout',
-        'hint' => txt('browse_layoutselect_note'),
-        'mt' => '4',
-        'mb' => '3',
-    ], $layout_list);
-
-    block_column_close();
-
-    block_column_open([
-        'size' => 3,
-    ]);
-
-    block_buttonbasic([
-        'text' => txt('go'),
-        'type' => 'js',
-        'target' => 'fmg_changeBrowserState(\'layout\')',
-        'mt' => 4,
-        'style' => 'padding: 11px;',
-    ]);
 }
 
 block_hidden_field([
@@ -278,7 +254,13 @@ block_row_close();
 block_form_close();
 
 ?>
-
+<div class="browser-nav" id="browserHeader">
+    <div class="fmg_browse_layoutselect_container">
+        <input type="text" id="input_fmg_browse_layout"
+            placeholder="<?php echo txt('browse_layoutselect_placeholder'); ?>" readonly>
+        <div class="fmg_browse_layoutselect_list" id="fmg_browse_layoutselect_list"></div>
+    </div>
+</div>
 <div class="browser-nav" id="browserNav">
 
 </div>
@@ -408,9 +390,11 @@ block_form_close();
 
             ?>
             <div id="fmg_browse_field_disabled" class="fmg-ui-note default text-left fmg_browse_field_hide">
-                <?php echo txt("fmg_browse_edit_disabled"); ?></div>
+                <?php echo txt("fmg_browse_edit_disabled"); ?>
+            </div>
             <div id="fmg_browse_field_related_upload" class="fmg-ui-note warning text-left fmg_browse_field_hide">
-                <?php echo txt("fmg_browse_edit_related_upload"); ?></div>
+                <?php echo txt("fmg_browse_edit_related_upload"); ?>
+            </div>
         </div>
         <div class="fmg_browse_field_footer">
             <button id="fmg_browse_submit_field_button" class="fmg_browse_field_submit_button"
@@ -449,8 +433,11 @@ block_form_close();
 </div>
 
 <script>
+    // Language vars
     const msg_waiting = '<?php echo "<strong>" . txt("browse_msg_waiting") . "</strong>"; ?>';
     const msg_fail = '<?php echo "<strong>" . txt("browse_msg_failed") . "</strong>"; ?>';
+
+    const msg_nav_layoutselect = '<?php echo txt("browse_layoutselect_placeholder"); ?>';
 
     const msg_nav_title = '<?php echo txt("browse_nav_records"); ?>';
     const msg_nav_next = '<?php echo txt("browse_page_next"); ?>';
@@ -479,6 +466,10 @@ block_form_close();
     const msg_delete_title = '<?php echo txt("browse_nav_delete_title"); ?>';
     const msg_delete_button = '<?php echo txt("browse_nav_delete_button"); ?>';
     const msg_delete_msg = '<?php echo txt("browse_msg_delete"); ?>';
+
+    // Layout
+    const browse_layoutselect_options = <?php echo json_encode($layout_list); ?>;
+
 
 </script>
 

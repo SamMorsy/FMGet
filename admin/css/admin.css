@@ -232,7 +232,6 @@ table.logs-table a.details-link:hover {
 
 .browser-container {
     width: 100%;
-    height: 600px;
     overflow-x: auto;
     border: 1px solid #ccc;
 }
@@ -301,6 +300,41 @@ table.logs-table a.details-link:hover {
     display: inline-flex;
     align-items: center;
     margin: 0px 5px;
+}
+
+.fmg_browse_layoutselect_container {
+    position: relative;
+    width: 400px;
+}
+
+#input_fmg_browse_layout {
+    width: 100%;
+    height: 33px;
+    border: none;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.fmg_browse_layoutselect_list {
+      position: fixed; /* instead of absolute to escape parent overflow */
+      max-height: 150px;
+      border: 1px solid #ccc;
+      background: white;
+      overflow-y: auto;
+      display: none;
+      z-index: 9999;
+}
+
+.fmg_browse_layoutselect_item {
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.fmg_browse_layoutselect_item:hover,
+.fmg_browse_layoutselect_item.active {
+    background-color: #f0f0f0;
 }
 
 .fmg_browse_modal_backdrop {

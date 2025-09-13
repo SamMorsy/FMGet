@@ -112,7 +112,7 @@ return [
     "title_browse" => "Browse Database",
 
     "browse_layoutselect_note" => "Only the fields on this layout are accessble.",
-    "browse_layoutselect_placeholder" => "Click here to select a layout",
+    "browse_layoutselect_placeholder" => "Search layouts",
     "browse_layoutselect_error" => "Unable to query the list of layouts from the FileMaker server.",
 
     "browse_nav_records" => "Browse records",
